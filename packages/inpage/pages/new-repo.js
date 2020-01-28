@@ -33,7 +33,7 @@ const NewRepo = {
 
       console.log('initialized with bounties option', username, repo)
     }
-    this.form.submit()
+    //this.form.submit()
     //setTimeout(() => form.submit(), 4000)
   }
 }

@@ -1,24 +1,15 @@
-import React, { Component } from 'react'
-
+import React from 'react'
 import Main from './main/Main'
+import MainWrapper from '../components/MainWrapper'
 
-class App extends Component {
+import './app.css'
 
-	constructor(props, context) {
-		super(props, context)
-
-	}
-
-	render() {
-		return (
-			<div className="app-wrapper">
-				<div className="app chrome">
-					<Main />
-				</div>
-			</div>
-
-		)
-	}
+const App = props => {
+	return(
+		<MainWrapper>
+			<Main/>
+		</MainWrapper>
+	)
 }
 
 export default App
