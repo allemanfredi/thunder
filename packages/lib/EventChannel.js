@@ -1,38 +1,38 @@
-import EventEmitter from "eventemitter3";
+import EventEmitter from 'eventemitter3'
 
 class EventChannel extends EventEmitter {
   constructor(channelKey = false) {
-    super();
+    super()
 
-    if (!channelKey) throw "No channel scope provided";
+    if (!channelKey) throw 'No channel scope provided'
 
-    this._channelKey = channelKey;
-    this._registerEventListener();
+    this._channelKey = channelKey
+    this._registerEventListener()
   }
 
   _registerEventListener() {
     window.addEventListener(
-      "message",
+      'message',
       ({ data: { isThunder = false, message, source } }) => {
-        if (!isThunder || (!message && !source)) return;
+        if (!isThunder || (!message && !source)) return
 
-        if (source === this._channelKey) return;
+        if (source === this._channelKey) return
 
-        const { action, data } = message;
+        const { action, data } = message
 
-        this.emit(action, data);
+        this.emit(action, data)
       }
-    );
+    )
   }
 
   send(action = false, data = {}) {
     if (!action)
       return {
         success: false,
-        error: "Function requires action {string} parameter"
-      };
+        error: 'Function requires action {string} parameter'
+      }
 
-    data = JSON.parse(JSON.stringify(data));
+    data = JSON.parse(JSON.stringify(data))
     window.postMessage(
       {
         message: {
@@ -42,9 +42,9 @@ class EventChannel extends EventEmitter {
         source: this._channelKey,
         isThunder: true
       },
-      "*"
-    );
+      '*'
+    )
   }
 }
 
-export default EventChannel;
+export default EventChannel

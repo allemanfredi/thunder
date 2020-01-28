@@ -1,12 +1,12 @@
-import Duplex from "@thunder/lib/Duplex";
-import axios from "axios";
+import Duplex from '@thunder/lib/Duplex'
+import axios from 'axios'
 
-const duplex = new Duplex.Host();
+const duplex = new Duplex.Host()
 
 const backgroundScript = {
   run() {
-    this.bindPopupDuplex();
-    this.bindTabDuplex();
+    this.bindPopupDuplex()
+    this.bindTabDuplex()
   },
 
   bindPopupDuplex() {
@@ -15,58 +15,58 @@ const backgroundScript = {
 
   bindTabDuplex() {
     duplex.on(
-      "tabRequest",
+      'tabRequest',
       async ({ resolve, data: { action, data, uuid, website } }) => {
         switch (action) {
-          case "init": {
+          case 'init': {
             // do somenthing
 
             resolve({
               success: true,
               data: null,
               uuid
-            });
-            break;
+            })
+            break
           }
 
-          case "getAccountInfo": {
+          case 'getAccountInfo': {
             const res = await axios.get(
               `https://api.github.com/users/${data.username}`
-            );
+            )
             resolve({
               success: true,
               data: res.data,
               uuid
-            });
-            break;
+            })
+            break
           }
-          case "getRepoInfo": {
+          case 'getRepoInfo': {
             const res = await axios.get(
               `https://api.github.com/repos/${data.repo}`
-            );
+            )
             resolve({
               success: true,
               data: res.data,
               uuid
-            });
-            break;
+            })
+            break
           }
-          case "getRepoIssues": {
+          case 'getRepoIssues': {
             const res = await axios.get(
               `https://api.github.com/repos/${data.repo}/issues?state=all`
-            );
+            )
 
             resolve({
               success: true,
               data: res.data,
               uuid
-            });
-            break;
+            })
+            break
           }
         }
       }
-    );
+    )
   }
-};
+}
 
-backgroundScript.run();
+backgroundScript.run()
