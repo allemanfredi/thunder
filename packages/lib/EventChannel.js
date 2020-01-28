@@ -12,9 +12,9 @@ class EventChannel extends EventEmitter {
 	}
 
 	_registerEventListener() {
-		window.addEventListener('message', ({ data: { isGCE = false, message, source } }) => {
+		window.addEventListener('message', ({ data: { isThunder = false, message, source } }) => {
 
-			if (!isGCE || (!message && !source))
+			if (!isThunder || (!message && !source))
 				return
 
 			if (source === this._channelKey)
@@ -40,7 +40,7 @@ class EventChannel extends EventEmitter {
 				data
 			},
 			source: this._channelKey,
-			isGCE: true
+			isThunder: true
 		}, '*')
 	}
 }
