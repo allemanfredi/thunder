@@ -1,0 +1,15 @@
+{
+  "name": "@thunder/lib",
+  "main": "index.js",
+  "author": "Alessandro Manfredi <alle.manfredi@gmail.com>",
+  "private": true,
+  "version": "0.0.1",
+  "dependencies": {
+    "eventemitter3": "^3.1.0",
+    "extensionizer": "^1.0.1",
+    "web3": "^1.2.5"
+  },
+  "scripts": {
+    "lint": "npx eslint . --fix"
+  }
+}

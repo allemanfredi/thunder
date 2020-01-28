@@ -1,0 +1,33 @@
+{
+  "name": "thunder",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "lerna run build",
+    "build:popup": "lerna run build --scope @thunder/popup",
+    "build:core": "lerna run build --ignore @thunder/popup",
+    "bootstrap": "lerna bootstrap",
+    "update-version": "lerna publish --skip-git --skip-npm --force-publish '*'",
+    "lint": "lerna run lint",
+    "init": "npm i && lerna bootstrap",
+    "build:zip": "yarn build && npx bestzip chrome-extension.zip dist manifest.json packages/popup/build packages/popup/static"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "acorn": "^7.1.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.9.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-standard": "^4.0.0",
+    "lerna": "^3.4.3"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.1.2"
+  }
+}
