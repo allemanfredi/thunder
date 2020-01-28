@@ -20,7 +20,16 @@ const Issues = {
 
       document.querySelector(`#issue_${issueNumber}_link`)
       .insertAdjacentHTML('afterend', `
-        <span style="color: white; padding: 4px 4px 4px 4px;border-radius: 7px;font-size: 13px;margin-left: 30px;font-weight: bold;background-color: ${pricesColor['high']};">
+        <span style="margin-left: 10px;
+          margin-right: 5px;
+          font-weight: bold;
+          height: 20px;
+          padding: .15em 4px;
+          font-size: 12px;
+          font-weight: 600;
+          line-height: 15px;
+          border-radius: 2px;
+          background-color: ${pricesColor['high']};">
           0.004 eth
         </span>
       `)
