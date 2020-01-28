@@ -12,9 +12,7 @@ const ISSUES = 'issues'
 const PULL_REQUEST = 'compare'
 
 const Layouter = {
-
   async init(_url, _request) {
-
     this.url = _url
     this.request = _request
 
@@ -29,35 +27,34 @@ const Layouter = {
       } catch (error) {
         console.log(error.message)
       }
-    }
-
-    else if (window.web3) {
+    } else if (window.web3) {
       this.web3 = new Web3(web3.currentProvider)
-    }
-
-    else {
-      console.log('Non-Ethereum browser detected. You should consider trying MetaMask!');
+    } else {
+      console.log(
+        'Non-Ethereum browser detected. You should consider trying MetaMask!'
+      )
     }
   },
 
   async bindMetamaskAccount() {
-    if (!this.web3)
-      return
+    if (!this.web3) return
 
     const accounts = await this.web3.eth.getAccounts()
     this.currentAccount = accounts[0]
   },
 
   async isRepoOwner() {
-    if (!this.web3)
-      return
+    if (!this.web3) return
 
     const details = gh(this.url)
     const owner = details.owner
-    
+
     //contract.isRepoOwner(owner, address)
 
-    return owner === 'allemanfredi' && this.currentAccount === '0x1f0b6A3AC984B4c990d8Ce867103E9C384629747'
+    return (
+      owner === 'allemanfredi' &&
+      this.currentAccount === '0x1f0b6A3AC984B4c990d8Ce867103E9C384629747'
+    )
   },
 
   async injectElements() {
@@ -76,32 +73,13 @@ const Layouter = {
     }
 
     if (this.url.includes(NEW_ISSUE) && this.isRepoOwner()) {
-      NewIssue.injectElements(
-        this.web3,
-        this.request,
-        this.url
-      )
-    }
-
-    else if (this.url.includes(NEW_REPO)) {
-      NewRepo.injectElements(
-        this.web3,
-        this.request
-      )
-    }
-
-    else if (this.url.includes(PULL_REQUEST)) {
-      PullRequest.injectElements(
-        this.web3,
-        this.request
-      )
-    }
-
-    else if (this.url.includes(ISSUES)) {
-      Issues.injectElements(
-        this.web3,
-        this.request
-      )
+      NewIssue.injectElements(this.web3, this.request, this.url)
+    } else if (this.url.includes(NEW_REPO)) {
+      NewRepo.injectElements(this.web3, this.request)
+    } else if (this.url.includes(PULL_REQUEST)) {
+      PullRequest.injectElements(this.web3, this.request)
+    } else if (this.url.includes(ISSUES)) {
+      Issues.injectElements(this.web3, this.request)
     }
   }
 }

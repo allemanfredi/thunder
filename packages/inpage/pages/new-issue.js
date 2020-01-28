@@ -1,12 +1,16 @@
-import gh from'parse-github-url'
+import gh from 'parse-github-url'
 
 const NewIssue = {
-
   form: null,
 
   async injectElements(_web3, _request, _url) {
-    document.querySelector("#new_issue > div > div.col-md-9.col-sm-12 > div > div > tab-container")
-    .insertAdjacentHTML('afterend', `
+    document
+      .querySelector(
+        '#new_issue > div > div.col-md-9.col-sm-12 > div > div > tab-container'
+      )
+      .insertAdjacentHTML(
+        'afterend',
+        `
       <hr/>
       <div style="display: inline-grid;">
         <label style="margin-left:10px;">Bounty (in ETH)</label>
@@ -16,30 +20,30 @@ const NewIssue = {
         </span>
       </div>
       <hr/>
-    `)
+    `
+      )
 
-    this.form = document.querySelector("#new_issue")
+    this.form = document.querySelector('#new_issue')
     this.form.addEventListener('submit', event => {
       this.handleSubmit(event, _web3, _request, _url)
     })
   },
-  
+
   async handleSubmit(_event, _web3, _request, _url) {
     _event.preventDefault()
 
     if (parseInt(document.querySelector('#bounty-value').value) > 0) {
-
       const issueTitle = document.querySelector('#issue_title').value
 
       const details = gh(_url)
       console.log(details)
 
-      const issues = await _request('getRepoIssues', { 
+      const issues = await _request('getRepoIssues', {
         repo: details.repo
       })
-  
+
       const newIssueId = issues.length + 1
-  
+
       console.log('issue will be created with issue', newIssueId)
       const accounts = await _web3.eth.getAccounts()
 

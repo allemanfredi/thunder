@@ -7,10 +7,11 @@ const pricesColor = {
 }
 
 const Issues = {
-
   injectElements() {
-    const issuesHTMLCollection = document.querySelector('#js-repo-pjax-container > div.container-lg.clearfix.new-discussion-timeline.experiment-repo-nav.px-3 > div > div > div.Box.mt-3 > div:nth-child(2) > div').children
-  
+    const issuesHTMLCollection = document.querySelector(
+      '#js-repo-pjax-container > div.container-lg.clearfix.new-discussion-timeline.experiment-repo-nav.px-3 > div > div > div.Box.mt-3 > div:nth-child(2) > div'
+    ).children
+
     const issues = [...issuesHTMLCollection]
     issues.forEach(issue => {
       const issueNumber = getIssueNumberFromIssue(issue)
@@ -18,8 +19,9 @@ const Issues = {
       //if (price) add badge about the price
       //now add in all issues
 
-      document.querySelector(`#issue_${issueNumber}_link`)
-      .insertAdjacentHTML('afterend', `
+      document.querySelector(`#issue_${issueNumber}_link`).insertAdjacentHTML(
+        'afterend',
+        `
         <span style="margin-left: 10px;
           margin-right: 5px;
           font-weight: bold;
@@ -32,7 +34,8 @@ const Issues = {
           background-color: ${pricesColor['high']};">
           0.004 eth
         </span>
-      `)
+      `
+      )
     })
   }
 }

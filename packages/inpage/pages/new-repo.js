@@ -1,10 +1,12 @@
 const NewRepo = {
-
   form: null,
 
   async injectElements(_web3) {
-    document.querySelector('#new_repository > div.owner-reponame.clearfix')
-      .insertAdjacentHTML('afterend', `
+    document
+      .querySelector('#new_repository > div.owner-reponame.clearfix')
+      .insertAdjacentHTML(
+        'afterend',
+        `
         <div class="form-checkbox unchecked mt-4 mb-3">
         <label>
           <input type="hidden">
@@ -15,7 +17,8 @@ const NewRepo = {
           Using a Smart Contract and MetaMask it is possible to offer bounties to those who collaborate on the project.
         </span>
       </div>
-      `)
+      `
+      )
 
     this.form = document.querySelector('#new_repository')
     this.form.addEventListener('submit', event => {
@@ -27,8 +30,7 @@ const NewRepo = {
     _event.preventDefault()
 
     if (document.querySelector('#bind-to-bounty').checked) {
-
-      const username = document.querySelector("#repository-owner").innerText
+      const username = document.querySelector('#repository-owner').innerText
       const repo = document.querySelector('#repository_name').value
 
       console.log('initialized with bounties option', username, repo)

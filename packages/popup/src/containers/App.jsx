@@ -5,11 +5,11 @@ import MainWrapper from '../components/MainWrapper'
 import './app.css'
 
 const App = props => {
-	return(
-		<MainWrapper>
-			<Main/>
-		</MainWrapper>
-	)
+  return (
+    <MainWrapper>
+      <Main />
+    </MainWrapper>
+  )
 }
 
 export default App
