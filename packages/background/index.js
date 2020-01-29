@@ -44,6 +44,7 @@ const backgroundScript = {
             const res = await axios.get(
               `https://api.github.com/repos/${data.repo}`
             )
+
             resolve({
               success: true,
               data: res.data,

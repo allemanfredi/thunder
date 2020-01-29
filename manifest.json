@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "thunder",
-    "description": "Start making money by writing code",
+    "description": "Start monetizing your code",
     "version": "0.0.1",
     "content_security_policy": "script-src 'self' 'unsafe-eval' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk=' 'sha256-IThiKMnsg0UHaLmP7sJxZpd/ohvINImwjxFJyxGFSlk='; object-src 'self'",
     "browser_action": {
