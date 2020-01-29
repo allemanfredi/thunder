@@ -3,7 +3,7 @@ import gh from 'parse-github-url'
 const NewIssue = {
   form: null,
 
-  async injectElements(_web3, _request, _url) {
+  async injectElements(_web3, _inpageRequester, _url) {
     document
       .querySelector(
         '#new_issue > div > div.col-md-9.col-sm-12 > div > div > tab-container'
@@ -25,20 +25,19 @@ const NewIssue = {
 
     this.form = document.querySelector('#new_issue')
     this.form.addEventListener('submit', event => {
-      this.handleSubmit(event, _web3, _request, _url)
+      this.handleSubmit(event, _web3, _inpageRequester, _url)
     })
   },
 
-  async handleSubmit(_event, _web3, _request, _url) {
+  async handleSubmit(_event, _web3, _inpageRequester, _url) {
     _event.preventDefault()
 
     if (parseInt(document.querySelector('#bounty-value').value) > 0) {
       const issueTitle = document.querySelector('#issue_title').value
 
       const details = gh(_url)
-      console.log(details)
 
-      const issues = await _request('getRepoIssues', {
+      const issues = await _inpageRequester.send('getRepoIssues', {
         repo: details.repo
       })
 
@@ -51,7 +50,7 @@ const NewIssue = {
       //contract.newIssue(details.repo, newIssueid,  bounty)
     }
 
-    this.form.submit()
+    //this.form.submit()
   }
 }
 

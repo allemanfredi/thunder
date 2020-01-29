@@ -18,17 +18,6 @@ const backgroundScript = {
       'tabRequest',
       async ({ resolve, data: { action, data, uuid, website } }) => {
         switch (action) {
-          case 'init': {
-            // do somenthing
-
-            resolve({
-              success: true,
-              data: null,
-              uuid
-            })
-            break
-          }
-
           case 'getAccountInfo': {
             const res = await axios.get(
               `https://api.github.com/users/${data.username}`

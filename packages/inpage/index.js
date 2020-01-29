@@ -1,31 +1,11 @@
-import RequestHandler from './handlers/RequestHandler'
-import EventChannel from '@thunder/lib/EventChannel'
+import InpageRequester from './lib/InpageRequester'
 import Layouter from './pages'
+import PostMessageStream from 'post-message-stream'
 
-const pageHook = {
-  init() {
-    this._bindEventChannel()
-    this._bindEvents()
+const inpageStream = new PostMessageStream({
+  name: 'thunderInpage',
+  target: 'thunderContentScript'
+})
+const inpageRequester = new InpageRequester(inpageStream)
 
-    this.request('init')
-      .then(() => {})
-      .catch(err => {
-        console.log('Failed to initialise ', err)
-      })
-
-    Layouter.init(window.location.href, this.request)
-  },
-
-  _bindEventChannel() {
-    this.eventChannel = new EventChannel('pageHook')
-    this.request = RequestHandler.init(this.eventChannel)
-  },
-
-  _bindEvents() {
-    /* this.eventChannel.on('setAddress', address => (
-				this.setAddress(address)
-		)) */
-  }
-}
-
-pageHook.init()
+Layouter.init(window.location.href, inpageRequester)

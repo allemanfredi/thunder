@@ -6,7 +6,7 @@ import {
 const PullRequest = {
   form: null,
 
-  injectElements(_web3, _request) {
+  injectElements(_web3, _inpageRequester) {
     document
       .querySelector(
         '#new_pull_request > div > div.col-9 > div > div > tab-container'
@@ -24,11 +24,11 @@ const PullRequest = {
 
     this.form = document.querySelector('#new_pull_request')
     this.form.addEventListener('submit', event => {
-      this.handleSubmit(event, _web3, _request)
+      this.handleSubmit(event, _web3, _inpageRequester)
     })
   },
 
-  async handleSubmit(_event, _web3, _request) {
+  async handleSubmit(_event, _web3, _inpageRequester) {
     _event.preventDefault()
 
     const whoPerformPullRequest = document.querySelector(
@@ -45,7 +45,7 @@ const PullRequest = {
 
     //check if there is this issue for the given repo, if the repo is payable
 
-    const info = await _request('getAccountInfo', {
+    const info = await _inpageRequester.send('getAccountInfo', {
       username: whoPerformPullRequest.substr(1, whoPerformPullRequest.length)
     })
 

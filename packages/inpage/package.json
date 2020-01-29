@@ -11,6 +11,7 @@
   "dependencies": {
     "extensionizer": "^1.0.1",
     "parse-github-url": "^1.0.2",
+    "post-message-stream": "^3.0.0",
     "web3": "^1.2.5"
   },
   "devDependencies": {

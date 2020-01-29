@@ -12,9 +12,9 @@ const ISSUES = 'issues'
 const PULL_REQUEST = 'compare'
 
 const Layouter = {
-  async init(_url, _request) {
+  async init(_url, _inpageRequester) {
     this.url = _url
-    this.request = _request
+    this.inpageRequester = _inpageRequester
 
     this.injectElements()
   },
@@ -73,13 +73,13 @@ const Layouter = {
     }
 
     if (this.url.includes(NEW_ISSUE) && this.isRepoOwner()) {
-      NewIssue.injectElements(this.web3, this.request, this.url)
+      NewIssue.injectElements(this.web3, this.inpageRequester, this.url)
     } else if (this.url.includes(NEW_REPO)) {
-      NewRepo.injectElements(this.web3, this.request)
+      NewRepo.injectElements(this.web3, this.inpageRequester)
     } else if (this.url.includes(PULL_REQUEST)) {
-      PullRequest.injectElements(this.web3, this.request)
+      PullRequest.injectElements(this.web3, this.inpageRequester)
     } else if (this.url.includes(ISSUES)) {
-      Issues.injectElements(this.web3, this.request)
+      Issues.injectElements(this.web3, this.inpageRequester)
     }
   }
 }

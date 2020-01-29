@@ -1,44 +1,39 @@
 import Duplex from '@thunder/lib/duplex'
-import EventChannel from '@thunder/lib/EventChannel'
 import extensionizer from 'extensionizer'
+import PostMessageStream from 'post-message-stream'
 
-const contentScript = {
-  eventChannel: new EventChannel('contentScript'),
-  duplex: new Duplex.Tab(),
+const contentScriptStream = new PostMessageStream({
+  name: 'thunderContentScript',
+  target: 'thunderInpage'
+})
 
-  init() {
-    this.registerListeners()
-    this.inject()
-  },
+const duplex = new Duplex.Tab()
 
-  registerListeners() {
-    this.eventChannel.on('tunnel', async data => {
-      try {
-        this.eventChannel.send(
-          'tabReply',
-          await this.duplex.send('tabRequest', data)
-        )
-      } catch (ex) {
-        console.log('Tab request failed:', ex)
-      }
-    })
-
-    this.duplex.on('tunnel', ({ action, data }) => {
-      this.eventChannel.send(action, data)
-    })
-  },
-
-  inject() {
-    const injectionSite = document.head || document.documentElement
-    const container = document.createElement('script')
-
-    container.src = extensionizer.extension.getURL('dist/inpage.js')
-    container.onload = function() {
-      this.parentNode.removeChild(this)
+const bindStreamListeners = () => {
+  contentScriptStream.on('data', async data => {
+    try {
+      contentScriptStream.write(await duplex.send('tabRequest', data))
+    } catch (ex) {
+      console.log('Tab request failed:', ex)
     }
+  })
 
-    injectionSite.insertBefore(container, injectionSite.children[0])
-  }
+  duplex.on('tunnel', ({ action, data }) => {
+    contentScriptStream.write({ action, data })
+  })
 }
 
-contentScript.init()
+const inject = () => {
+  const injectionSite = document.head || document.documentElement
+  const container = document.createElement('script')
+
+  container.src = extensionizer.extension.getURL('dist/inpage.js')
+  container.onload = function() {
+    this.parentNode.removeChild(this)
+  }
+
+  injectionSite.insertBefore(container, injectionSite.children[0])
+}
+
+bindStreamListeners()
+inject()
