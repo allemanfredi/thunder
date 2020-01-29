@@ -15,7 +15,7 @@ const Issues = {
     const issues = [...issuesHTMLCollection]
     issues.forEach(issue => {
       const issueNumber = getIssueNumberFromIssue(issue)
-      //const price = contract.getIssuePrice(issueNumber)
+      //const price = contract.getIssuePrice(repoOwner, repoName, issueNumber)
       //if (price) add badge about the price
       //now add in all issues
 
