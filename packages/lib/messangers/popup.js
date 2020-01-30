@@ -3,7 +3,7 @@ export default {
     this.duplex = duplex
   }
 
-  /*func() {
+  /* func() {
     return this.duplex.send('func')
-  }*/
+  } */
 }

@@ -93,6 +93,8 @@ module.exports = {
     'no-sync': 1
   },
   'globals': {
-		'localStorage': true,
+    'localStorage': true,
+    'ethereum': true,
+    'web3': true
 	},
 }

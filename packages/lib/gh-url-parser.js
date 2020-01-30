@@ -1,7 +1,12 @@
+const _matchExact = (r, str) => {
+  var match = str.match(r)
+  return match && str === match[0]
+}
+
 const getCorrespondingPageFromGithubURL = _url => {
   if (
     _matchExact(
-      /https:\/\/github.com\/[a-zA-Z0-9]*\/[a-zA-ZA0-9]*\/issues([\/]?\?[0-9a-zA-Z%=+]*open[0-9a-zA-Z%=+]*)?/g,
+      /https:\/\/github.com\/[a-zA-Z0-9]*\/[a-zA-ZA0-9]*\/issues([/]?\?[0-9a-zA-Z%=+]*open[0-9a-zA-Z%=+]*)?/g,
       _url
     )
   )
@@ -32,11 +37,6 @@ const getCorrespondingPageFromGithubURL = _url => {
     return 'new-issue'
 
   if (_matchExact(/https:\/\/github.com\/new\/?/g, _url)) return 'new-repo'
-}
-
-const _matchExact = (r, str) => {
-  var match = str.match(r)
-  return match && str === match[0]
 }
 
 export { getCorrespondingPageFromGithubURL }

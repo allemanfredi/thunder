@@ -66,9 +66,9 @@ class DuplexHost extends EventEmitter {
   handleMessage(source, message) {
     const { noAck = false, hostname, messageID, action, data } = message
 
-    if (action == 'messageReply') return this.handleReply(data)
+    if (action === 'messageReply') return this.handleReply(data)
 
-    if (source == 'tab' && !['tabRequest'].includes(action))
+    if (source === 'tab' && !['tabRequest'].includes(action))
       return console.log(`Droping unauthorized tab request: ${action}`, data)
 
     if (noAck) return this.emit(action, { hostname, data })

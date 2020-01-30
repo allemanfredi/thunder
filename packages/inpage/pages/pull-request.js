@@ -57,7 +57,7 @@ const PullRequest = {
     const issueNumber = extrapolateIssueNumberFromText(pullRequestTextBody)
     const pullRequestNumber = issues.length + 1
 
-    //TODO: check that the issue exists
+    // TODO: check that the issue exists
 
     if (!issueNumber) {
       console.log('Impossible to extrapolate issue number')

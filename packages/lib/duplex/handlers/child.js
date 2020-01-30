@@ -6,10 +6,11 @@ class DuplexChild extends EventEmitter {
   constructor(type = false) {
     super()
 
-    if (!['tab', 'popup'].includes(type))
+    if (!['tab', 'popup'].includes(type)) {
       throw new Error(
         `DuplexChild expects a source type of either tab or popup, instead "${type}" was provided`
       )
+    }
 
     this.type = type
     this.incoming = new Map() // Incoming message replies
@@ -69,7 +70,7 @@ class DuplexChild extends EventEmitter {
   }
 
   handleMessage({ action, data, messageID, noAck = false }) {
-    if (action == 'messageReply') return this.handleReply(data)
+    if (action === 'messageReply') return this.handleReply(data)
 
     if (noAck) return this.emit(action, data)
 

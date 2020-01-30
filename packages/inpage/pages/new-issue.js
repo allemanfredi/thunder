@@ -78,7 +78,7 @@ const NewIssue = {
         )
         if (res) this.form.submit()
       } catch (err) {
-        //TODO: cancel event
+        // TODO: cancel event
         console.log(err)
       }
     } else {

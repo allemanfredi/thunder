@@ -33,9 +33,8 @@ const IssueDetails = {
     const labelNotPresent = document.querySelector(
       '#partial-discussion-sidebar > div.discussion-sidebar-item.sidebar-labels.js-discussion-sidebar-item'
     ).lastElementChild
-    if (labelNotPresent.innerText === 'None yet' && issueBountyInEth > 0) {
+    if (labelNotPresent.innerText === 'None yet' && issueBountyInEth > 0)
       labelNotPresent.innerText = ''
-    }
 
     if (issueBountyInEth > 0) {
       document.querySelector('#labels-select-menu').insertAdjacentHTML(

@@ -72,7 +72,8 @@ class Layouter {
         PullRequest.injectElements(this.web3, this.url, this.inpageRequester)
         break
       }
-      default: break;
+      default:
+        break
     }
   }
 }

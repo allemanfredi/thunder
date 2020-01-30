@@ -50,7 +50,7 @@ const NewRepo = {
         ])
         if (res) this.form.submit()
       } catch (err) {
-        //TODO cancel event
+        // TODO cancel event
       }
     } else {
       this.form.submit()

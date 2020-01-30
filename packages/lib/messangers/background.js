@@ -3,7 +3,7 @@ export default {
     this.duplex = duplex
   }
 
-  /*func(data) {
+  /* func(data) {
     this.duplex.send('popup', 'func', data, false)
   },
 
@@ -17,5 +17,5 @@ export default {
       },
       false
     )
-  },*/
+  }, */
 }
