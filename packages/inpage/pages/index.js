@@ -3,13 +3,14 @@ import NewRepo from './new-repo'
 import NewIssue from './new-issue'
 import PullRequest from './pull-request'
 import Issues from './issues'
-import gh from 'parse-github-url'
+import IssueDetails from './issue-details'
 
 const BASE_URL = 'https://github.com/'
 const NEW_REPO = 'new'
 const NEW_ISSUE = 'issues/new'
 const ISSUES = 'issues'
 const PULL_REQUEST = 'compare'
+const ISSUE_DETAILS = 'issues/[0-9][0-9]*'
 
 class Layouter {
   constructor(_url, _inpageRequester) {
@@ -52,7 +53,8 @@ class Layouter {
       this.url.split('/')[this.url.split('/').length - 1] === ISSUES ||
       (this.url.split('/')[this.url.split('/').length - 1] === '' &&
         this.url.includes(ISSUES)) ||
-      this.url.includes(PULL_REQUEST)
+      this.url.includes(PULL_REQUEST) ||
+      this.url.match(ISSUE_DETAILS)
     ) {
       await this.initMetamask()
       await this.bindMetamaskAccount()
@@ -70,6 +72,8 @@ class Layouter {
         this.url.includes(ISSUES))
     ) {
       Issues.injectElements(this.web3, this.url)
+    } else if (this.url.match(ISSUE_DETAILS)) {
+      IssueDetails.injectElements(this.web3, this.url)
     }
   }
 }
