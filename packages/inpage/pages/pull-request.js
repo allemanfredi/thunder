@@ -1,12 +1,29 @@
 import {
-  extrapolateIssueNumberFromText,
-  extrapolateEthAddressFromBio
+  extrapolateIssueNumberFromText
 } from '@thunder/lib/utils'
+import {  makeEthContractSend, makeEthContractCall } from '@thunder/lib/eth'
+import gh from 'parse-github-url'
 
 const PullRequest = {
   form: null,
 
-  injectElements(_web3, _inpageRequester) {
+  async injectElements(_web3, _url) {
+
+    const details = gh(_url)
+    const repoOwner = details.owner
+    const repoName = details.repo.split('/')[1]
+
+    try {
+      const hasBountyOption = await makeEthContractCall(
+        _web3,
+        'hasRepoBountyOption',
+        [repoOwner, repoName]
+      )
+      if (!hasBountyOption) return
+    } catch (err) {
+      return
+    }
+
     document
       .querySelector(
         '#new_pull_request > div > div.col-9 > div > div > tab-container'
@@ -24,49 +41,39 @@ const PullRequest = {
 
     this.form = document.querySelector('#new_pull_request')
     this.form.addEventListener('submit', event => {
-      this.handleSubmit(event, _web3, _inpageRequester)
+      this.handleSubmit(event, _web3, _url)
     })
   },
 
-  async handleSubmit(_event, _web3, _inpageRequester) {
+  async handleSubmit(_event, _web3, _url) {
     _event.preventDefault()
 
-    const whoPerformPullRequest = document.querySelector(
-      '#new_pull_request > div > div.col-9 > div > span > a > img'
-    ).alt
     const pullRequestTextBody = document.querySelector('#pull_request_body')
       .value
 
+    const details = gh(_url)
+    const repoOwner = details.owner
+    const repoName = details.repo.split('/')[1]
     const issueNumber = extrapolateIssueNumberFromText(pullRequestTextBody)
 
-    //check if this issue is payable -> send to the contract who did the PR -> we need to get it's eth address or ENS name
-    //for now we can use 'Ξ' taken from the bio
-    //we could also set the name within the popup and store it in the local storage
+    if (!issueNumber) {
+      console.log('Impossible to extrapolate issue number')
+      return;
+    }
 
-    //check if there is this issue for the given repo, if the repo is payable
-
-    const info = await _inpageRequester.send('getAccountInfo', {
-      username: whoPerformPullRequest.substr(1, whoPerformPullRequest.length)
-    })
-
-    const whoPerformPullRequestEthAddress = extrapolateEthAddressFromBio(
-      info.bio
-    )
-    if (!whoPerformPullRequestEthAddress) {
-      console.info(
-        'Please paste your ETH address in your bio preceded by Ξ or check that is correct'
+    try {
+      const isPullRequestCreated = await makeEthContractSend(
+        _web3,
+        'newPullRequest',
+        0,
+        [repoOwner, repoName, issueNumber]
       )
+      if (!isPullRequestCreated) return
+    } catch (err) {
       return
     }
 
-    //contract.newPullRequest(whoPerformPullRequest.substr(1,whoPerformPullRequest.length), whoPerformPullRequestEthAddress, issueNumber)
-
-    console.log(`
-      ${whoPerformPullRequest.substr(1, whoPerformPullRequest.length)} 
-      want to be paid at ${whoPerformPullRequestEthAddress} 
-      for the issue #${issueNumber}`)
-
-    //this.form.submit()
+    this.form.submit()
   }
 }
 

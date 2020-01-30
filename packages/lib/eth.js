@@ -1,5 +1,5 @@
 import CONTRACT_ABI from './contractAbi/abi'
-const CONTRACT_ADDRESS = '0xf64fc25ee4e4290ad5fa0ea6f48f09559ac1dc33'
+const CONTRACT_ADDRESS = '0xbbab34eebbc7a6aa75efbf25b32ccd74565d4c34'
 
 const correctEthFormat = (_amount, _decimals, _operation) =>
   _operation === '/'

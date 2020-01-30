@@ -65,7 +65,7 @@ class Layouter {
     } else if (this.url.includes(NEW_REPO)) {
       NewRepo.injectElements(this.web3, this.inpageRequester)
     } else if (this.url.includes(PULL_REQUEST)) {
-      PullRequest.injectElements(this.web3, this.inpageRequester)
+      PullRequest.injectElements(this.web3, this.url)
     } else if (
       this.url.split('/')[this.url.split('/').length - 1] === ISSUES ||
       (this.url.split('/')[this.url.split('/').length - 1] === '' &&

@@ -14,19 +14,6 @@ const specialKeywords = [
   'resolved'
 ]
 
-const PREFIX = 'Ξ'
-const ETH_ADDRESS_LENGTH = 21
-
-const extrapolateEthAddressFromBio = _bio => {
-  const index = _bio.indexOf(PREFIX)
-  if (index < 0) return false
-
-  const ethAddress = _bio.substr(index + 1, index + 1 + ETH_ADDRESS_LENGTH)
-  if (!web3.utils.isAddress(ethAddress)) return false
-
-  return ethAddress
-}
-
 const extrapolateIssueNumberFromText = _text => {
   let isIncluded = false
   let includedSpecialKeyword = null
@@ -59,7 +46,6 @@ const getIssueNumberFromIssue = _issue => {
 }
 
 export {
-  extrapolateEthAddressFromBio,
   extrapolateIssueNumberFromText,
   getIssueNumberFromIssue
 }

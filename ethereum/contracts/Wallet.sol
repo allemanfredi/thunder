@@ -110,7 +110,7 @@ contract Wallet {
   }
   
   /**
-   * User can do only a PR on an issue (for now)
+   * User can do only one PR for an issue (for now)
    * */
   function newPullRequest (
       string memory _repoOwner,
