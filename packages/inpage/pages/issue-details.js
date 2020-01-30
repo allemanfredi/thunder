@@ -30,7 +30,7 @@ const IssueDetails = {
       'ether'
     )
 
-    if (issueBountyInEth) {
+    if (issueBountyInEth > 0) {
       document.querySelector('#labels-select-menu').insertAdjacentHTML(
         'afterend',
         `

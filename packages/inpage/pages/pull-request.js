@@ -1,14 +1,11 @@
-import {
-  extrapolateIssueNumberFromText
-} from '@thunder/lib/utils'
-import {  makeEthContractSend, makeEthContractCall } from '@thunder/lib/eth'
+import { extrapolateIssueNumberFromText } from '@thunder/lib/utils'
+import { makeEthContractSend, makeEthContractCall } from '@thunder/lib/eth'
 import gh from 'parse-github-url'
 
 const PullRequest = {
   form: null,
 
-  async injectElements(_web3, _url) {
-
+  async injectElements(_web3, _url, _inpageRequester) {
     const details = gh(_url)
     const repoOwner = details.owner
     const repoName = details.repo.split('/')[1]
@@ -41,24 +38,30 @@ const PullRequest = {
 
     this.form = document.querySelector('#new_pull_request')
     this.form.addEventListener('submit', event => {
-      this.handleSubmit(event, _web3, _url)
+      this.handleSubmit(event, _web3, _url, _inpageRequester)
     })
   },
 
-  async handleSubmit(_event, _web3, _url) {
+  async handleSubmit(_event, _web3, _url, _inpageRequester) {
     _event.preventDefault()
 
     const pullRequestTextBody = document.querySelector('#pull_request_body')
       .value
 
     const details = gh(_url)
+    const issues = await _inpageRequester.send('getRepoIssues', {
+      repo: details.repo
+    })
     const repoOwner = details.owner
     const repoName = details.repo.split('/')[1]
     const issueNumber = extrapolateIssueNumberFromText(pullRequestTextBody)
+    const pullRequestNumber = issues.length + 1
+
+    //TODO: check that the issue exists
 
     if (!issueNumber) {
       console.log('Impossible to extrapolate issue number')
-      return;
+      return
     }
 
     try {
@@ -66,7 +69,7 @@ const PullRequest = {
         _web3,
         'newPullRequest',
         0,
-        [repoOwner, repoName, issueNumber]
+        [repoOwner, repoName, issueNumber, pullRequestNumber]
       )
       if (!isPullRequestCreated) return
     } catch (err) {

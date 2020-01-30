@@ -56,6 +56,8 @@ const NewIssue = {
         repo: details.repo
       })
 
+      console.log(issues)
+
       const issueNumber = issues.length + 1
       const repoOwner = details.owner
       const repoName = details.repo.split('/')[1]

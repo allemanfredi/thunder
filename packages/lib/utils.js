@@ -45,7 +45,4 @@ const getIssueNumberFromIssue = _issue => {
   )
 }
 
-export {
-  extrapolateIssueNumberFromText,
-  getIssueNumberFromIssue
-}
+export { extrapolateIssueNumberFromText, getIssueNumberFromIssue }

@@ -17,6 +17,7 @@ contract Wallet {
   struct PullRequest {
       bytes32 id;
       uint64 issueNumber;
+      uint64 number;
       address creator;
   }
 
@@ -24,11 +25,11 @@ contract Wallet {
   mapping(bytes32 => Issue[]) repoIssues;
   mapping(bytes32 => uint256) issueBounty;
   mapping(bytes32 => bool) hasBountyOption;
+  mapping(bytes32 => address) pullRequestIdCreator;
   mapping(bytes32 => address) repoIdOwner;
+  mapping(address => bytes32) creatorPullRequestId;
   mapping(bytes32 => bytes32) issueIdRepoId;
   mapping(bytes32 => mapping(uint64 => PullRequest[])) repoPullRequests;
-  mapping(bytes32 => address) pullRequestIdCreator;
-  mapping(address => bytes32) creatorPullRequestId;
 
   event NewRepoEvent(string repoOwner, string repoName, bytes32 repoId);
   event NewIssueEvent(string repoOwner, string repoName, bytes32 issueId, uint256 bounty);
@@ -110,12 +111,13 @@ contract Wallet {
   }
   
   /**
-   * User can do only one PR for an issue (for now)
+   * User can do only a PR on an issue (for now)
    * */
   function newPullRequest (
       string memory _repoOwner,
       string memory _repoName,
-      uint64 _issueNumber
+      uint64 _issueNumber,
+      uint64 _pullRequestNumber
   )
       public
       returns (bool)
@@ -124,10 +126,10 @@ contract Wallet {
       bytes32 repoId = keccak256(abi.encodePacked(_repoName, _repoOwner));
       require(issueIdRepoId[issueId] == repoId, "Issue not existing");
       
-      bytes32 pullRequestId = keccak256(abi.encodePacked(_repoName, _repoOwner, _issueNumber, msg.sender));
+      bytes32 pullRequestId = keccak256(abi.encodePacked(_repoName, _repoOwner, _issueNumber, _pullRequestNumber, msg.sender));
       require(pullRequestIdCreator[pullRequestId] != msg.sender, "msg.sender has already done a PR on this issue");
       
-      repoPullRequests[repoId][_issueNumber].push(PullRequest(pullRequestId, _issueNumber, msg.sender));
+      repoPullRequests[repoId][_issueNumber].push(PullRequest(pullRequestId, _issueNumber, _pullRequestNumber, msg.sender));
       pullRequestIdCreator[pullRequestId] = msg.sender;
       creatorPullRequestId[msg.sender] = pullRequestId;
       emit NewPullRequestEvent(msg.sender, _repoName, _issueNumber);

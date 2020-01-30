@@ -1,234 +1,239 @@
 [
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_repoOwner",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_repoName",
-				"type": "string"
-			},
-			{
-				"internalType": "uint64",
-				"name": "_issueNumber",
-				"type": "uint64"
-			}
-		],
-		"name": "newIssue",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_repoOwner",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_repoName",
-				"type": "string"
-			},
-			{
-				"internalType": "uint64",
-				"name": "_issueNumber",
-				"type": "uint64"
-			}
-		],
-		"name": "newPullRequest",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "repoOwner",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "repoName",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"internalType": "bytes32",
-				"name": "issueId",
-				"type": "bytes32"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "bounty",
-				"type": "uint256"
-			}
-		],
-		"name": "NewIssueEvent",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "pullRequestCreator",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "repoName",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint64",
-				"name": "issueId",
-				"type": "uint64"
-			}
-		],
-		"name": "NewPullRequestEvent",
-		"type": "event"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_repoOwner",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_repoName",
-				"type": "string"
-			}
-		],
-		"name": "newRepo",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "repoOwner",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "repoName",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"internalType": "bytes32",
-				"name": "repoId",
-				"type": "bytes32"
-			}
-		],
-		"name": "NewRepoEvent",
-		"type": "event"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_repoOwner",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_repoName",
-				"type": "string"
-			},
-			{
-				"internalType": "uint64",
-				"name": "_issueNumber",
-				"type": "uint64"
-			}
-		],
-		"name": "getIssuePrice",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "_repoOwner",
-				"type": "string"
-			},
-			{
-				"internalType": "string",
-				"name": "_repoName",
-				"type": "string"
-			}
-		],
-		"name": "hasRepoBountyOption",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	}
+  {
+    "inputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "repoOwner",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "repoName",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "issueId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "bounty",
+        "type": "uint256"
+      }
+    ],
+    "name": "NewIssueEvent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "pullRequestCreator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "repoName",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "issueId",
+        "type": "uint64"
+      }
+    ],
+    "name": "NewPullRequestEvent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "repoOwner",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "repoName",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "repoId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "NewRepoEvent",
+    "type": "event"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_repoOwner",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_repoName",
+        "type": "string"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_issueNumber",
+        "type": "uint64"
+      }
+    ],
+    "name": "getIssuePrice",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_repoOwner",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_repoName",
+        "type": "string"
+      }
+    ],
+    "name": "hasRepoBountyOption",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_repoOwner",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_repoName",
+        "type": "string"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_issueNumber",
+        "type": "uint64"
+      }
+    ],
+    "name": "newIssue",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_repoOwner",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_repoName",
+        "type": "string"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_issueNumber",
+        "type": "uint64"
+      },
+      {
+        "internalType": "uint64",
+        "name": "_pullRequestNumber",
+        "type": "uint64"
+      }
+    ],
+    "name": "newPullRequest",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_repoOwner",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_repoName",
+        "type": "string"
+      }
+    ],
+    "name": "newRepo",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
 ]
