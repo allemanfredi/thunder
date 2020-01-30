@@ -26,7 +26,10 @@ const Issues = {
         repoName,
         parseInt(issueNumber)
       ])
-      const issueBountyInEth = _web3.utils.fromWei(_web3.utils.toBN(issueBounty), 'ether')
+      const issueBountyInEth = _web3.utils.fromWei(
+        _web3.utils.toBN(issueBounty),
+        'ether'
+      )
       if (issueBountyInEth > 0) {
         document.querySelector(`#issue_${issueNumber}_link`).insertAdjacentHTML(
           'afterend',
