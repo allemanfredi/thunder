@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Orbitron&display=swap');
+
+body {
+  font-family: 'Orbitron', sans-serif;
+}
+
 .app{
   width: 300px;
   height: 200px;

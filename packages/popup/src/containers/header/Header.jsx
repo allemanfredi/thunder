@@ -11,7 +11,7 @@ const Header = props => {
         width={300}
         height={150}
         style={{
-          'background-color': '#000016'
+          'background-color': 'rgb(255, 159, 64)'
         }}
         params={particlesSettings}
       />

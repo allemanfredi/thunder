@@ -4,7 +4,7 @@ import { makeEthContractCall } from '@thunder/lib/eth'
 const pricesColor = {
   low: 'rgb(255, 205, 86)',
   normal: 'rgb(54, 162, 235)',
-  high: 'rgb(255, 102, 102)'
+  high: 'rgb(255, 159, 64)'
 }
 
 const IssueDetails = {

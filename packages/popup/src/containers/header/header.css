@@ -1,6 +1,6 @@
 .header__container {
   text-align: center;
-  margin-top: -150px;
+  margin-top: -155px;
   position: relative;
 }
 
@@ -8,9 +8,10 @@
   margin-top: 10px;
   margin-bottom: 5px;
   font-size: 40px;
-  color: white;
+  color: black;
+  font-weight: 900;
 }
 
 .header__sub-title {
-  color: white;
+  color: black;
 }
