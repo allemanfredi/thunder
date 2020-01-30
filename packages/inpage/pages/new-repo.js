@@ -1,3 +1,5 @@
+import { makeEthContractSend } from '@thunder/lib/eth'
+
 const NewRepo = {
   form: null,
 
@@ -30,13 +32,21 @@ const NewRepo = {
     _event.preventDefault()
 
     if (document.querySelector('#bind-to-bounty').checked) {
-      const username = document.querySelector('#repository-owner').innerText
-      const repo = document.querySelector('#repository_name').value
+      const repoOwner = document.querySelector('#repository-owner').innerText
+      const repoName = document.querySelector('#repository_name').value
 
-      console.log('initialized with bounties option', username, repo)
+      try {
+        const res = await makeEthContractSend(_web3, 'newRepo', 0, [
+          repoOwner,
+          repoName
+        ])
+        if (res) this.form.submit()
+      } catch (err) {
+        //TODO cancel event
+      }
+    } else {
+      this.form.submit()
     }
-    //this.form.submit()
-    //setTimeout(() => form.submit(), 4000)
   }
 }
 

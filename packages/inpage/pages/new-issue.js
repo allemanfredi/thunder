@@ -1,4 +1,5 @@
 import gh from 'parse-github-url'
+import { makeEthContractSend } from '@thunder/lib/eth'
 
 const NewIssue = {
   form: null,
@@ -32,25 +33,40 @@ const NewIssue = {
   async handleSubmit(_event, _web3, _inpageRequester, _url) {
     _event.preventDefault()
 
-    if (parseInt(document.querySelector('#bounty-value').value) > 0) {
-      const issueTitle = document.querySelector('#issue_title').value
-
+    const bountyText = document.querySelector('#bounty-value').value
+    if (parseFloat(bountyText) > 0) {
       const details = gh(_url)
 
       const issues = await _inpageRequester.send('getRepoIssues', {
         repo: details.repo
       })
 
-      const newIssueId = issues.length + 1
+      const issueNumber = issues.length + 1
+      const repoOwner = details.owner
+      const repoName = details.repo.split('/')[1]
 
-      console.log('issue will be created with issue', newIssueId)
-      const accounts = await _web3.eth.getAccounts()
+      console.log(
+        'issue will be created with issue',
+        issueNumber,
+        repoName,
+        repoOwner
+      )
 
-      //contract.newIssue(details.repo, newIssueid, issueText, bounty) or
-      //contract.newIssue(details.repo, newIssueid,  bounty)
+      try {
+        const res = await makeEthContractSend(
+          _web3,
+          'newIssue',
+          _web3.utils.toWei(bountyText, 'ether'),
+          [repoOwner, repoName, issueNumber]
+        )
+        if (res) this.form.submit()
+      } catch (err) {
+        //TODO: cancel event
+        console.log(err)
+      }
+    } else {
+      this.form.submit()
     }
-
-    //this.form.submit()
   }
 }
 

@@ -43,3 +43,8 @@ After having built the application, it needs to be loaded on chrome.
 
 * Go to chrome://extensions/ and check the box for Developer mode in the top right.
 * Click the Load unpacked extension button and select the build folder for your extension to install it.
+
+## TODO List:
+* An issue (bounty) can be created only by the repo owner
+* Handle repo deleted -> funds must be returned to the repo ownerm (keep track of all funds put by an owner mapping(owner -> uint))
+* function for checking if given repoName and an username this one is the repo owner

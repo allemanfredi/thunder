@@ -7,5 +7,5 @@ const inpageStream = new PostMessageStream({
   target: 'thunderContentScript'
 })
 const inpageRequester = new InpageRequester(inpageStream)
-
-Layouter.init(window.location.href, inpageRequester)
+const layouter = new Layouter(window.location.href, inpageRequester)
+layouter.injectElements()

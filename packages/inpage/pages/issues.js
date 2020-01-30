@@ -1,4 +1,6 @@
 import { getIssueNumberFromIssue } from '@thunder/lib/utils'
+import { makeEthContractCall } from '@thunder/lib/eth'
+import gh from 'parse-github-url'
 
 const pricesColor = {
   low: 'rgb(255, 205, 86)',
@@ -7,35 +9,43 @@ const pricesColor = {
 }
 
 const Issues = {
-  injectElements() {
+  injectElements(_web3, _url) {
     const issuesHTMLCollection = document.querySelector(
       '#js-repo-pjax-container > div.container-lg.clearfix.new-discussion-timeline.experiment-repo-nav.px-3 > div > div > div.Box.mt-3 > div:nth-child(2) > div'
     ).children
 
-    const issues = [...issuesHTMLCollection]
-    issues.forEach(issue => {
-      const issueNumber = getIssueNumberFromIssue(issue)
-      //const price = contract.getIssuePrice(repoOwner, repoName, issueNumber)
-      //if (price) add badge about the price
-      //now add in all issues
+    const details = gh(_url)
+    const repoOwner = details.owner
+    const repoName = details.repo.split('/')[1]
 
-      document.querySelector(`#issue_${issueNumber}_link`).insertAdjacentHTML(
-        'afterend',
+    const issues = [...issuesHTMLCollection]
+    issues.forEach(async issue => {
+      const issueNumber = getIssueNumberFromIssue(issue)
+      const issueBounty = await makeEthContractCall(_web3, 'getIssuePrice', [
+        repoOwner,
+        repoName,
+        parseInt(issueNumber)
+      ])
+      const issueBountyInEth = _web3.utils.fromWei(_web3.utils.toBN(issueBounty), 'ether')
+      if (issueBountyInEth > 0) {
+        document.querySelector(`#issue_${issueNumber}_link`).insertAdjacentHTML(
+          'afterend',
+          `
+          <span style="margin-left: 10px;
+            margin-right: 5px;
+            font-weight: bold;
+            height: 20px;
+            padding: .15em 4px;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 15px;
+            border-radius: 2px;
+            background-color: ${pricesColor['high']};">
+            ${issueBountyInEth} Eth
+          </span>
         `
-        <span style="margin-left: 10px;
-          margin-right: 5px;
-          font-weight: bold;
-          height: 20px;
-          padding: .15em 4px;
-          font-size: 12px;
-          font-weight: 600;
-          line-height: 15px;
-          border-radius: 2px;
-          background-color: ${pricesColor['high']};">
-          0.004 eth
-        </span>
-      `
-      )
+        )
+      }
     })
   }
 }
