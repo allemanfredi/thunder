@@ -4,13 +4,7 @@ import NewIssue from './new-issue'
 import PullRequest from './pull-request'
 import Issues from './issues'
 import IssueDetails from './issue-details'
-
-const BASE_URL = 'https://github.com/'
-const NEW_REPO = 'new'
-const NEW_ISSUE = 'issues/new'
-const ISSUES = 'issues'
-const PULL_REQUEST = 'compare'
-const ISSUE_DETAILS = 'issues/[0-9][0-9]*'
+import { getCorrespondingPageFromGithubURL } from '@thunder/lib/gh-url-parser'
 
 class Layouter {
   constructor(_url, _inpageRequester) {
@@ -43,37 +37,42 @@ class Layouter {
   }
 
   async injectElements() {
-    if (!this.url.includes(BASE_URL)) {
-      return
-    }
+    const currentPage = getCorrespondingPageFromGithubURL(this.url)
+    console.log(currentPage)
 
     if (
-      this.url.includes(NEW_REPO) ||
-      this.url.includes(NEW_ISSUE) ||
-      this.url.split('/')[this.url.split('/').length - 1] === ISSUES ||
-      (this.url.split('/')[this.url.split('/').length - 1] === '' &&
-        this.url.includes(ISSUES)) ||
-      this.url.includes(PULL_REQUEST) ||
-      this.url.match(ISSUE_DETAILS)
+      currentPage === 'new-repo' ||
+      currentPage === 'new-issue' ||
+      currentPage === 'issues' ||
+      currentPage === 'issue-details' ||
+      currentPage === 'pull-request'
     ) {
       await this.initMetamask()
       await this.bindMetamaskAccount()
     }
 
-    if (this.url.includes(NEW_ISSUE)) {
-      NewIssue.injectElements(this.web3, this.inpageRequester, this.url)
-    } else if (this.url.includes(NEW_REPO)) {
-      NewRepo.injectElements(this.web3, this.inpageRequester)
-    } else if (this.url.includes(PULL_REQUEST)) {
-      PullRequest.injectElements(this.web3, this.url, this.inpageRequester)
-    } else if (
-      this.url.split('/')[this.url.split('/').length - 1] === ISSUES ||
-      (this.url.split('/')[this.url.split('/').length - 1] === '' &&
-        this.url.includes(ISSUES))
-    ) {
-      Issues.injectElements(this.web3, this.url)
-    } else if (this.url.match(ISSUE_DETAILS)) {
-      IssueDetails.injectElements(this.web3, this.url)
+    switch (currentPage) {
+      case 'new-repo': {
+        NewRepo.injectElements(this.web3, this.inpageRequester)
+        break
+      }
+      case 'new-issue': {
+        NewIssue.injectElements(this.web3, this.inpageRequester, this.url)
+        break
+      }
+      case 'issues': {
+        Issues.injectElements(this.web3, this.url)
+        break
+      }
+      case 'issue-details': {
+        IssueDetails.injectElements(this.web3, this.url)
+        break
+      }
+      case 'pull-request': {
+        PullRequest.injectElements(this.web3, this.url, this.inpageRequester)
+        break
+      }
+      default: break;
     }
   }
 }

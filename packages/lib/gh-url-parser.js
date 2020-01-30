@@ -30,6 +30,8 @@ const getCorrespondingPageFromGithubURL = _url => {
     )
   )
     return 'new-issue'
+
+  if (_matchExact(/https:\/\/github.com\/new\/?/g, _url)) return 'new-repo'
 }
 
 const _matchExact = (r, str) => {
