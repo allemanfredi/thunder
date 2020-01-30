@@ -5,7 +5,6 @@ const NewIssue = {
   form: null,
 
   async injectElements(_web3, _inpageRequester, _url) {
-
     const details = gh(_url)
     const repoOwner = details.owner
     const repoName = details.repo.split('/')[1]

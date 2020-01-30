@@ -50,7 +50,8 @@ class Layouter {
       this.url.includes(NEW_REPO) ||
       this.url.includes(NEW_ISSUE) ||
       this.url.split('/')[this.url.split('/').length - 1] === ISSUES ||
-      (this.url.split('/')[this.url.split('/').length - 1] === '' && this.url.includes(ISSUES)) || 
+      (this.url.split('/')[this.url.split('/').length - 1] === '' &&
+        this.url.includes(ISSUES)) ||
       this.url.includes(PULL_REQUEST)
     ) {
       await this.initMetamask()
@@ -65,7 +66,8 @@ class Layouter {
       PullRequest.injectElements(this.web3, this.inpageRequester)
     } else if (
       this.url.split('/')[this.url.split('/').length - 1] === ISSUES ||
-      (this.url.split('/')[this.url.split('/').length - 1] === '' && this.url.includes(ISSUES))
+      (this.url.split('/')[this.url.split('/').length - 1] === '' &&
+        this.url.includes(ISSUES))
     ) {
       Issues.injectElements(this.web3, this.url)
     }

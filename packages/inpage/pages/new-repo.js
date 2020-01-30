@@ -32,10 +32,16 @@ const NewRepo = {
     _event.preventDefault()
 
     if (document.querySelector('#bind-to-bounty').checked) {
-      const repoOwner = document.querySelector('#repository-owner').innerText.replace(/\s/g, '')
-      const repoName = document.querySelector('#repository_name').value.replace(/\s/g, '')
+      const repoOwner = document
+        .querySelector('#repository-owner')
+        .innerText.replace(/\s/g, '')
+      const repoName = document
+        .querySelector('#repository_name')
+        .value.replace(/\s/g, '')
 
-      console.log(`Repository created with bounty option = true, repoOnwer: ${repoOwner} and repoName: ${repoName}`)
+      console.log(
+        `Repository created with bounty option = true, repoOnwer: ${repoOwner} and repoName: ${repoName}`
+      )
 
       try {
         const res = await makeEthContractSend(_web3, 'newRepo', 0, [
