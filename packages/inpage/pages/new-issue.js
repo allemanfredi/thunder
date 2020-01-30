@@ -1,10 +1,26 @@
 import gh from 'parse-github-url'
-import { makeEthContractSend } from '@thunder/lib/eth'
+import { makeEthContractCall, makeEthContractSend } from '@thunder/lib/eth'
 
 const NewIssue = {
   form: null,
 
   async injectElements(_web3, _inpageRequester, _url) {
+
+    const details = gh(_url)
+    const repoOwner = details.owner
+    const repoName = details.repo.split('/')[1]
+
+    try {
+      const hasBountyOption = await makeEthContractCall(
+        _web3,
+        'hasRepoBountyOption',
+        [repoOwner, repoName]
+      )
+      if (!hasBountyOption) return
+    } catch (err) {
+      return
+    }
+
     document
       .querySelector(
         '#new_issue > div > div.col-md-9.col-sm-12 > div > div > tab-container'

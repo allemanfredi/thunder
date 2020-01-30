@@ -41,20 +41,6 @@ class Layouter {
     this.currentAccount = accounts[0]
   }
 
-  async isRepoOwner() {
-    if (!this.web3) return
-
-    const details = gh(this.url)
-    const owner = details.owner
-
-    //contract.isRepoOwner(owner, address)
-
-    return (
-      owner === 'allemanfredi' &&
-      this.currentAccount === '0x1f0b6A3AC984B4c990d8Ce867103E9C384629747'
-    )
-  }
-
   async injectElements() {
     if (!this.url.includes(BASE_URL)) {
       return
@@ -64,14 +50,14 @@ class Layouter {
       this.url.includes(NEW_REPO) ||
       this.url.includes(NEW_ISSUE) ||
       this.url.split('/')[this.url.split('/').length - 1] === ISSUES ||
-      this.url.split('/')[this.url.split('/').length - 1] === '' ||
+      (this.url.split('/')[this.url.split('/').length - 1] === '' && this.url.includes(ISSUES)) || 
       this.url.includes(PULL_REQUEST)
     ) {
       await this.initMetamask()
       await this.bindMetamaskAccount()
     }
 
-    if (this.url.includes(NEW_ISSUE) && this.isRepoOwner()) {
+    if (this.url.includes(NEW_ISSUE)) {
       NewIssue.injectElements(this.web3, this.inpageRequester, this.url)
     } else if (this.url.includes(NEW_REPO)) {
       NewRepo.injectElements(this.web3, this.inpageRequester)
@@ -79,7 +65,7 @@ class Layouter {
       PullRequest.injectElements(this.web3, this.inpageRequester)
     } else if (
       this.url.split('/')[this.url.split('/').length - 1] === ISSUES ||
-      this.url.split('/')[this.url.split('/').length - 1] === ''
+      (this.url.split('/')[this.url.split('/').length - 1] === '' && this.url.includes(ISSUES))
     ) {
       Issues.injectElements(this.web3, this.url)
     }
