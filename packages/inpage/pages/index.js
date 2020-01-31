@@ -4,6 +4,7 @@ import NewIssue from './new-issue'
 import PullRequest from './pull-request'
 import Issues from './issues'
 import IssueDetails from './issue-details'
+import MergePullRequest from './merge-pull-request'
 import { getCorrespondingPageFromGithubURL } from '@thunder/lib/gh-url-parser'
 
 class Layouter {
@@ -45,7 +46,8 @@ class Layouter {
       currentPage === 'new-issue' ||
       currentPage === 'issues' ||
       currentPage === 'issue-details' ||
-      currentPage === 'pull-request'
+      currentPage === 'pull-request' ||
+      currentPage === 'merge-pull-request'
     ) {
       await this.initMetamask()
       await this.bindMetamaskAccount()
@@ -70,6 +72,14 @@ class Layouter {
       }
       case 'pull-request': {
         PullRequest.injectElements(this.web3, this.url, this.inpageRequester)
+        break
+      }
+      case 'merge-pull-request': {
+        MergePullRequest.injectElements(
+          this.web3,
+          this.url,
+          this.inpageRequester
+        )
         break
       }
       default:

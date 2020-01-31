@@ -35,10 +35,7 @@ const extrapolateIssueNumberFromText = _text => {
 }
 
 const getIssueNumberFromIssue = _issue => {
-  return _issue.attributes[0].value.substr(
-    _issue.attributes[0].value.length - 1,
-    1
-  )
+  return _issue.attributes[0].value.match(/[0-9]*/g).find(e => e != '')
 }
 
 export { extrapolateIssueNumberFromText, getIssueNumberFromIssue }
