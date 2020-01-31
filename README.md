@@ -46,3 +46,4 @@ After having built the application, it needs to be loaded on chrome.
 
 ## TODO List:
 * Handle repo deleted -> funds must be returned to the repo ownerm (keep track of all funds put by an owner mapping(owner -> uint))
+* SC (newPullRequest): _creatorName can do only one PR in order to don't be hacked (2 address for a username) -> PR bounty goes to a wrong address -> attacker can't create a fake PR
