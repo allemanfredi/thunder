@@ -56,3 +56,8 @@ After having built the application, it needs to be loaded on chrome.
     * an owner can receive a rating from 0 to 5 (understand how much it impacts on reputation)
     * if the person who makes the PR evaluates the owner who has successfully merged, the reputation of the person who made the PR is decreased
     * `currentOnwerRepoReputation += (issueBounty * ownerRepoNumberOfPullRequestCorrectlyPayed) - (issueBounty * ownerRepoNumberOfPullRequestNotCorrectlyPayed` => this encourages users to do well because the more bad they do the harder it will be to gain reputation
+    * if a repoOwner does not close the issues in the established time or merges without communicating it to the smart contract => `currentOnwerRepoReputation -= issueBounty * (ownerRepoNumberOfPullRequestNotCorrectlyPayed + 1)`
+    * __BIGGEST PROBLEMS__:
+      - repoOwner merge with extension off => can be solved by using an oracle for calling Github API in order to check if the PR has been merged
+      - repoOwner can visualize the PR commits, copy the code and reject the PR => i still don't know how to solve it, maybe user can evaluate the repoOwner badly without getting back Ethers. Probabilistically speaking, users with good reputation will not do this kind of thing but it's possible.
+
