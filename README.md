@@ -51,7 +51,7 @@ After having built the application, it needs to be loaded on chrome.
     * an owner can only be evaluated by an address that made the PR (if owner accept the PR, its reputation becomes `currentOnwerRepoReputation += (issueBounty * ownerRepoNumberOfPullRequestCorrectlyPayed) - (issueBounty * ownerRepoNumberOfPullRequestNotCorrectlyPayed`)
     * the creator of the PR can evaluate the repo owner after that the PR:
       - has been merged
-      - it has not been merged but X time has passed since the time of creation (X to be defined) (in case an owner copy paste the PR code without paying who made it)
+      - it has not been merged but X time has passed since the time of creation (X must be defined by the repo ownwer during the issue initialization with a maximum limit equal to 1/2 months) (in case an owner copy paste the PR code without paying who made it)
     * every time an owner accepts the PR (therefore pays) the reputation of both him and the person who made the PR must be improved
     * an owner can receive a rating from 0 to 5 (understand how much it impacts on reputation)
     * if the person who makes the PR evaluates the owner who has successfully merged, the reputation of the person who made the PR is decreased
