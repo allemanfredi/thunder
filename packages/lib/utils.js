@@ -23,10 +23,10 @@ const extrapolateIssueNumberFromText = _text => {
 
   if (!isIncluded) return false
 
-  const words = _text.split(' ')
+  const words = _text.split(' ').filter(word => word != '')
   const indexPresentSpecialKeyword = words.indexOf(includedSpecialKeyword)
 
-  if (words[indexPresentSpecialKeyword + 1].match('#[1-9][1-9]*')) {
+  if (words[indexPresentSpecialKeyword + 1].match('#[1-9][0-9]*')) {
     return words[indexPresentSpecialKeyword + 1].substr(
       1,
       words[indexPresentSpecialKeyword + 1].length
