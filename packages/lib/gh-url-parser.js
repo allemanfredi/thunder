@@ -45,6 +45,9 @@ const getCorrespondingPageFromGithubURL = _url => {
     )
   )
     return 'merge-pull-request'
+
+  if (_matchExact(/https:\/\/github.com\/[a-z0-9]*?[\?tab\=[a-z]*]?/g, _url))
+    return 'profile'
 }
 
 export { getCorrespondingPageFromGithubURL }

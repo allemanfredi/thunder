@@ -2,12 +2,6 @@ import { extrapolateIssueNumberFromText } from '@thunder/lib/utils'
 import { makeEthContractSend, makeEthContractCall } from '@thunder/lib/eth'
 import gh from 'parse-github-url'
 
-const pricesColor = {
-  low: 'rgb(255, 205, 86)',
-  normal: 'rgb(54, 162, 235)',
-  high: 'rgb(255, 159, 64)'
-}
-
 const PullRequest = {
   form: null,
 
@@ -39,12 +33,13 @@ const PullRequest = {
         margin-left: 15px;
         font-size: 14px;
         margin-bottom: 10px;
-        background: ${pricesColor['high']};
+        background: rgb(255, 159, 64, 0.45);
         margin-right: 30%;
         padding: 5px 5px 5px 5px;
-        font-weight: bold;
+        font-weight: 600;
         line-height: 15px;
-        border-radius: 2px;">
+        border-radius: 5px;
+        border: 3px solid rgb(255, 159, 64);">
         If you want to get paid please enter which issue solves this pull request (e.g. resolve #1)
       </div> 
       <hr/>
@@ -75,6 +70,7 @@ const PullRequest = {
     const repoOwner = details.owner
     const repoName = details.repo.split('/')[1]
     const issueNumber = extrapolateIssueNumberFromText(pullRequestTextBody)
+    console.log(issueNumber)
     const pullRequestNumber = issues.length + 1
 
     // TODO: check that the issue exists

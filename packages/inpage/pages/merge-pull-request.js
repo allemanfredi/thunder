@@ -2,12 +2,6 @@ import gh from 'parse-github-url'
 import { makeEthContractSend, makeEthContractCall } from '@thunder/lib/eth'
 import { extrapolateIssueNumberFromText } from '@thunder/lib/utils'
 
-const pricesColor = {
-  low: 'rgb(255, 205, 86)',
-  normal: 'rgb(54, 162, 235)',
-  high: 'rgb(255, 159, 64)'
-}
-
 const sleep = _ms => new Promise(resolve => setTimeout(resolve, _ms))
 
 const MergePullRequest = {
@@ -65,13 +59,13 @@ const MergePullRequest = {
             margin-left: 15px;
             font-size: 14px;
             margin-bottom: 10px;
-            background: ${pricesColor['high']};
-            font-weight: bold;
+            background: rgb(255, 159, 64, 0.45);
             margin-right: 30%;
             padding: 5px 5px 5px 5px;
-            font-weight: bold;
+            font-weight: 600;
             line-height: 15px;
-            border-radius: 2px;'>
+            border-radius: 5px;
+            border: 3px solid rgb(255, 159, 64);'>
             You are paying ${issueBountyInEth} Eth for this Pull Request to ${this.pullRequestCreator} whose address is: ${this.pullRequestCreatorAddress}
           </div>
         `
