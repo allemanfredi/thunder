@@ -1,7 +1,7 @@
 pragma solidity >=0.4.21 <0.7.0;
 
 
-contract Wallet {
+contract Thunder {
   struct Repo {
     bytes32 id;
     string name;
@@ -24,6 +24,15 @@ contract Wallet {
     bool isClosed;
   }
 
+  struct User {
+    uint64 numberOfIssues;
+    uint64 numberOfIssuesClosedCorrectly;
+    uint64 numberOfIssuesClosedNotCorrectly;
+    uint256 reputation;
+    bool created;
+    address addr;
+  }
+
   mapping(address => Repo[]) repoOwner;
   mapping(bytes32 => Issue[]) repoIssues;
   mapping(bytes32 => uint256) issueBounty;
@@ -33,6 +42,7 @@ contract Wallet {
   mapping(bytes32 => bytes32) issueIdRepoId;
   mapping(bytes32 => mapping(bytes32 => mapping(address => PullRequest))) repoPullRequests;
   mapping(bytes32 => mapping(bytes32 => PullRequest[])) repoPullRequestsArr;
+  mapping(string => User) usernameUserInfo;
 
   event NewRepoEvent(string repoOwner, string repoName, bytes32 repoId);
   event NewIssueEvent(
@@ -63,9 +73,17 @@ contract Wallet {
     returns (bool)
   {
     bytes32 repoId = keccak256(abi.encodePacked(_repoName, _repoOwner));
+    require(repoIdOwner[repoId] == address(0), 'Repository already existing');
+
     repoOwner[msg.sender].push(Repo(repoId, _repoName, _repoOwner));
     hasBountyOption[repoId] = true;
     repoIdOwner[repoId] = msg.sender;
+
+    User memory user = usernameUserInfo[_repoOwner];
+    if (user.created == false) {
+      usernameUserInfo[_repoOwner] = User(0, 0, 0, 0, true, msg.sender);
+    }
+
     emit NewRepoEvent(_repoOwner, _repoName, repoId);
     return true;
   }
@@ -89,6 +107,14 @@ contract Wallet {
     );
     issueBounty[issueId] = msg.value;
     issueIdRepoId[issueId] = repoId;
+
+    User storage user = usernameUserInfo[_repoOwner];
+    if (user.created == false) {
+      usernameUserInfo[_repoOwner] = User(1, 0, 0, 0, true, msg.sender);
+    } else {
+      user.numberOfIssues += 1;
+    }
+
     emit NewIssueEvent(_repoOwner, _repoName, issueId, msg.value);
     return true;
   }
@@ -112,9 +138,6 @@ contract Wallet {
     return hasBountyOption[repoId];
   }
 
-  /**
-   * User can do only a PR on an issue (for now)
-   * */
   function newPullRequest(
     string memory _repoOwner,
     string memory _repoName,
@@ -145,7 +168,7 @@ contract Wallet {
       'msg.sender has already done a PR on this issue'
     );
 
-    //TODO: _creatorName can do only a PR in order to don't be hacked (2 address for a username) -> PR bounty goes to a wrong address -> attacker can't create a fake PR
+    //TODO: _creatorName can do only a PR in order to don't be hacked (2 address for a username)
 
     PullRequest memory pullRequest = PullRequest(
       pullRequestId,
@@ -196,6 +219,8 @@ contract Wallet {
     uint64 _pullRequestNumber,
     address _receiver
   ) public onlyRepoOwner(_repoOwner, _repoName) returns (bool) {
+    //receiver has a PR on this issueId
+    //repoExissts
     bytes32 issueId = keccak256(
       abi.encodePacked(_issueNumber, _repoName, _repoOwner)
     );
@@ -225,8 +250,18 @@ contract Wallet {
       'acceptPullRequest -> Pull request already closed'
     );
 
-    //get issue price of this PullRequest
     uint256 bounty = issueBounty[issueId];
+
+    //if msg.sender == _receiver then reputation should not increase as a user could self increase reputation
+    if (_receiver != msg.sender) {
+      User storage user = usernameUserInfo[_repoOwner];
+      user.numberOfIssuesClosedCorrectly += 1;
+      user.reputation +=
+        (bounty * user.numberOfIssuesClosedCorrectly) -
+        (bounty * user.numberOfIssuesClosedNotCorrectly);
+    }
+
+    //get issue price of this PullRequest
     (bool success, ) = _receiver.call.value(bounty)('');
     require(
       success == true,
@@ -234,8 +269,16 @@ contract Wallet {
     );
 
     pullRequest.isClosed = true;
-
     return true;
+  }
+
+  function getUsernameInfo(string memory _username)
+    public
+    view
+    returns (uint64, uint256)
+  {
+    User memory user = usernameUserInfo[_username];
+    return (user.numberOfIssues, user.reputation);
   }
 
   function getPullRequestUsernameAddress(
@@ -259,4 +302,6 @@ contract Wallet {
     }
     return address(0);
   }
+
+  //TODO: function for claiming bad behavior of repoOwner
 }
