@@ -14,6 +14,15 @@ const bindPopupDuplex = () => {
 const bindTabDuplex = () => {
   duplex.on('tabRequest', async ({ resolve, data: { action, data, uuid } }) => {
     switch (action) {
+      case 'isEnabled': {
+        const isEnabled = await thunder.isEnabled()
+        resolve({
+          success: true,
+          data: isEnabled,
+          uuid
+        })
+        break
+      }
       case 'getAccountInfo': {
         const accountInfo = await thunder.githubApiController.getAccountInfo(
           data.username

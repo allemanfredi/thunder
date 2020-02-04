@@ -7,7 +7,7 @@ class Thunder {
     backgroundMessanger.init(duplex)
 
     this.githubApiController = new GithubApiController()
-    this.persistenceStorageController = new PersistenceGlobalStateController()
+    this.persistenceGlobalStateController = new PersistenceGlobalStateController()
   }
 
   getGlobalState() {
@@ -16,6 +16,10 @@ class Thunder {
 
   changeEnabling(_isEnabled) {
     this.persistenceGlobalStateController.changeEnabling(_isEnabled)
+  }
+
+  isEnabled() {
+    return this.persistenceGlobalStateController.state.isEnabled 
   }
 }
 

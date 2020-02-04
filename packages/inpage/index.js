@@ -8,4 +8,11 @@ const inpageStream = new PostMessageStream({
 })
 const inpageRequester = new InpageRequester(inpageStream)
 const layouter = new Layouter(window.location.href, inpageRequester)
-layouter.injectElements()
+
+const start = async () => {
+  const isThunderEnabled = await inpageRequester.send('isEnabled')
+  if (isThunderEnabled)
+    layouter.injectElements()
+}
+
+start()

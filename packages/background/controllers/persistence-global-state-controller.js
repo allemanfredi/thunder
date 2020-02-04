@@ -12,7 +12,7 @@ class PersistenceGlobalStateController extends Store {
     super(new InitialSettings())
 
     const data = this._loadFromStorage()
-    if (!this.data) this.setState(data)
+    if (this.data) this.setState(data)
 
     this.state$.subscribe(_state => {
       backgroundMessanger.changeGlobalState(_state)
