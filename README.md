@@ -5,7 +5,7 @@
 thunder is a Google Chrome extension to pay and get paid to PR in Ethereum on Github
 
 
-### Installing
+### :page_with_curl: Installing
 
 ```
 git clone https://github.com/allemanfredi/thunder.git
@@ -39,10 +39,49 @@ yarn build:core
 
 After having built the application, it needs to be loaded on chrome.
 
-## How to install Chrome extensions manually
+## :exclamation: How to install Chrome extensions manually
 
 * Go to chrome://extensions/ and check the box for Developer mode in the top right.
 * Click the Load unpacked extension button and select the build folder for your extension to install it.
+
+## :guardsman: Thunder Smart Contract Tests
+
+```
+Contract: Thunder Tests
+    ✓ Should create a new repo (215ms)
+    ✓ Should not create a repo equal to one that already exists (191ms)
+    ✓ Should create a new issue (205ms)
+    ✓ Should not create a new issue with value = 0 (173ms)
+    ✓ Should not create an issue equal to one that already exists (220ms)
+    ✓ Should not create an issue on a repo not existing (85ms)
+    ✓ Should get an issue bounty (221ms)
+    ✓ Should be a repo with bounty option (151ms)
+    ✓ Should not be a repo with bounty option (105ms)
+    ✓ Should create a new pull request (307ms)
+    ✓ Should not create a new pull request with the same number of issue number (281ms)
+    ✓ Should not create a new pull request on a not existing issue (269ms)
+    ✓ Same user should not create more than one pull request on the same issue (271ms)
+    ✓ More than one should be able to create a pull request on the same issue (312ms)
+    ✓ Repo owner should accept the second pull request (388ms)
+    ✓ Repo owner should not accept pull request not performed (281ms)
+    ✓ Repo owner should not accept other pull request if the corresponding issue is closed (401ms)
+
+
+  17 passing (4s)
+```
+
+### How to run it?
+```
+cd ethereum
+npm install
+truffle develop
+```
+
+Start Truffle tests via:
+
+```
+truffle_develop> test
+```
 
 ## TODO List:
 * Handle repo deleted -> funds must be returned to the repo owner (keep track of all funds put by an owner mapping(owner -> uint))
