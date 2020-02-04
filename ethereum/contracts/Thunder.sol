@@ -13,6 +13,7 @@ contract Thunder {
     uint64 number;
     address creator;
     uint256 bounty;
+    bool isClosed;
   }
 
   struct PullRequest {
@@ -44,23 +45,32 @@ contract Thunder {
   mapping(bytes32 => mapping(bytes32 => PullRequest[])) repoPullRequestsArr;
   mapping(string => User) usernameUserInfo;
 
-  event NewRepoEvent(string repoOwner, string repoName, bytes32 repoId);
-  event NewIssueEvent(
+  event NewRepo(string repoOwner, string repoName, bytes32 repoId);
+  event NewIssue(
     string repoOwner,
     string repoName,
     bytes32 issueId,
     uint256 bounty
   );
-  event NewPullRequestEvent(
-    address pullRequestCreator,
+  event NewPullRequest(
+    string pullRequestCreatorName,
+    string repoOwner,
     string repoName,
-    uint64 issueId
+    uint64 pullRequestNumber,
+    uint64 issueNumber
+  );
+  event NewAcceptedPullRequested(
+    string repoName,
+    string repoOwner,
+    string pullRequestCreatorName,
+    uint64 issueNumber,
+    uint64 pullRequestNumber
   );
 
   constructor() public {}
 
   modifier onlyRepoOwner(string memory _repoOwner, string memory _repoName) {
-    bytes32 repoId = keccak256(abi.encodePacked(_repoName, _repoOwner));
+    bytes32 repoId = getRepoId(_repoOwner, _repoName);
     require(
       msg.sender == repoIdOwner[repoId],
       'onlyRepoOwner -> This function is callable only by the repo owner'
@@ -72,8 +82,11 @@ contract Thunder {
     public
     returns (bool)
   {
-    bytes32 repoId = keccak256(abi.encodePacked(_repoName, _repoOwner));
-    require(repoIdOwner[repoId] == address(0), 'Repository already existing');
+    bytes32 repoId = getRepoId(_repoOwner, _repoName);
+    require(
+      repoIdOwner[repoId] == address(0),
+      'newRepo -> Repository already existing'
+    );
 
     repoOwner[msg.sender].push(Repo(repoId, _repoName, _repoOwner));
     hasBountyOption[repoId] = true;
@@ -84,7 +97,7 @@ contract Thunder {
       usernameUserInfo[_repoOwner] = User(0, 0, 0, 0, true, msg.sender);
     }
 
-    emit NewRepoEvent(_repoOwner, _repoName, repoId);
+    emit NewRepo(_repoOwner, _repoName, repoId);
     return true;
   }
 
@@ -95,15 +108,18 @@ contract Thunder {
   ) public payable returns (bool) {
     require(msg.value > 0, 'newIssue -> Issue bounty must be greater than 0');
 
-    bytes32 issueId = keccak256(
-      abi.encodePacked(_issueNumber, _repoName, _repoOwner)
+    bytes32 repoId = getRepoId(_repoOwner, _repoName);
+    require(
+      repoIdOwner[repoId] != address(0),
+      'newIssue -> Repository not existing'
     );
-    bytes32 repoId = keccak256(abi.encodePacked(_repoName, _repoOwner));
+
+    bytes32 issueId = getIssueId(_repoOwner, _repoName, _issueNumber);
 
     require(issueIdRepoId[issueId] == 0, 'newIssue -> Issue already existing');
 
     repoIssues[repoId].push(
-      Issue(issueId, _issueNumber, msg.sender, msg.value)
+      Issue(issueId, _issueNumber, msg.sender, msg.value, false)
     );
     issueBounty[issueId] = msg.value;
     issueIdRepoId[issueId] = repoId;
@@ -115,18 +131,16 @@ contract Thunder {
       user.numberOfIssues += 1;
     }
 
-    emit NewIssueEvent(_repoOwner, _repoName, issueId, msg.value);
+    emit NewIssue(_repoOwner, _repoName, issueId, msg.value);
     return true;
   }
 
-  function getIssuePrice(
+  function getIssueBounty(
     string memory _repoOwner,
     string memory _repoName,
     uint64 _issueNumber
   ) public view returns (uint256) {
-    bytes32 issueId = keccak256(
-      abi.encodePacked(_issueNumber, _repoName, _repoOwner)
-    );
+    bytes32 issueId = getIssueId(_repoOwner, _repoName, _issueNumber);
     return issueBounty[issueId];
   }
 
@@ -134,7 +148,7 @@ contract Thunder {
     string memory _repoOwner,
     string memory _repoName
   ) public view returns (bool) {
-    bytes32 repoId = keccak256(abi.encodePacked(_repoName, _repoOwner));
+    bytes32 repoId = getRepoId(_repoOwner, _repoName);
     return hasBountyOption[repoId];
   }
 
@@ -145,23 +159,23 @@ contract Thunder {
     uint64 _pullRequestNumber,
     string memory _creatorName
   ) public returns (bool) {
-    bytes32 issueId = keccak256(
-      abi.encodePacked(_issueNumber, _repoName, _repoOwner)
+    require(
+      _issueNumber != _pullRequestNumber,
+      'newPullRequest -> Impossible to create an issue with the same number of the pull request'
     );
-    bytes32 repoId = keccak256(abi.encodePacked(_repoName, _repoOwner));
+
+    bytes32 repoId = getRepoId(_repoOwner, _repoName);
+    bytes32 issueId = getIssueId(_repoOwner, _repoName, _issueNumber);
     require(
       issueIdRepoId[issueId] == repoId,
       'newPullRequest -> Issue not existing'
     );
-
-    bytes32 pullRequestId = keccak256(
-      abi.encodePacked(
-        _repoName,
-        _repoOwner,
-        _issueNumber,
-        _pullRequestNumber,
-        msg.sender
-      )
+    bytes32 pullRequestId = getPullRequestId(
+      _repoOwner,
+      _repoName,
+      _issueNumber,
+      _pullRequestNumber,
+      msg.sender
     );
     require(
       pullRequestIdCreator[pullRequestId] != msg.sender,
@@ -182,7 +196,13 @@ contract Thunder {
     repoPullRequestsArr[repoId][issueId].push(pullRequest);
     pullRequestIdCreator[pullRequestId] = msg.sender;
 
-    emit NewPullRequestEvent(msg.sender, _repoName, _issueNumber);
+    emit NewPullRequest(
+      _creatorName,
+      _repoOwner,
+      _repoName,
+      _pullRequestNumber,
+      _issueNumber
+    );
     return true;
   }
 
@@ -191,10 +211,8 @@ contract Thunder {
     string memory _repoName,
     uint64 _issueNumber
   ) public view returns (uint256) {
-    bytes32 issueId = keccak256(
-      abi.encodePacked(_issueNumber, _repoName, _repoOwner)
-    );
-    bytes32 repoId = keccak256(abi.encodePacked(_repoName, _repoOwner));
+    bytes32 repoId = getRepoId(_repoOwner, _repoName);
+    bytes32 issueId = getIssueId(_repoOwner, _repoName, _issueNumber);
     return repoPullRequestsArr[repoId][issueId].length;
   }
 
@@ -204,10 +222,8 @@ contract Thunder {
     uint64 _issueNumber,
     uint256 _index
   ) public view returns (address, string memory) {
-    bytes32 issueId = keccak256(
-      abi.encodePacked(_issueNumber, _repoName, _repoOwner)
-    );
-    bytes32 repoId = keccak256(abi.encodePacked(_repoName, _repoOwner));
+    bytes32 repoId = getRepoId(_repoOwner, _repoName);
+    bytes32 issueId = getIssueId(_repoOwner, _repoName, _issueNumber);
     PullRequest memory pullRequest = repoPullRequestsArr[repoId][issueId][_index];
     return (pullRequest.creatorAddress, pullRequest.creatorName);
   }
@@ -219,25 +235,19 @@ contract Thunder {
     uint64 _pullRequestNumber,
     address _receiver
   ) public onlyRepoOwner(_repoOwner, _repoName) returns (bool) {
-    //receiver has a PR on this issueId
-    //repoExissts
-    bytes32 issueId = keccak256(
-      abi.encodePacked(_issueNumber, _repoName, _repoOwner)
-    );
-    bytes32 repoId = keccak256(abi.encodePacked(_repoName, _repoOwner));
+    bytes32 repoId = getRepoId(_repoOwner, _repoName);
+    bytes32 issueId = getIssueId(_repoOwner, _repoName, _issueNumber);
     require(
       issueIdRepoId[issueId] == repoId,
       'acceptPullRequest -> Issue not existing'
     );
 
-    bytes32 pullRequestId = keccak256(
-      abi.encodePacked(
-        _repoName,
-        _repoOwner,
-        _issueNumber,
-        _pullRequestNumber,
-        _receiver
-      )
+    bytes32 pullRequestId = getPullRequestId(
+      _repoOwner,
+      _repoName,
+      _issueNumber,
+      _pullRequestNumber,
+      _receiver
     );
     require(
       pullRequestIdCreator[pullRequestId] == _receiver,
@@ -250,25 +260,28 @@ contract Thunder {
       'acceptPullRequest -> Pull request already closed'
     );
 
-    uint256 bounty = issueBounty[issueId];
-
     //if msg.sender == _receiver then reputation should not increase as a user could self increase reputation
     if (_receiver != msg.sender) {
-      User storage user = usernameUserInfo[_repoOwner];
-      user.numberOfIssuesClosedCorrectly += 1;
-      user.reputation +=
-        (bounty * user.numberOfIssuesClosedCorrectly) -
-        (bounty * user.numberOfIssuesClosedNotCorrectly);
+      increaseUserReputation(_repoOwner, issueBounty[issueId]);
     }
 
-    //get issue price of this PullRequest
-    (bool success, ) = _receiver.call.value(bounty)('');
+    (bool success, ) = _receiver.call.value(issueBounty[issueId])('');
     require(
       success == true,
       'acceptPullRequest -> Error during bounty transfering'
     );
 
     pullRequest.isClosed = true;
+    closeIssue(repoId, issueId);
+
+    emit NewAcceptedPullRequested(
+      _repoName,
+      _repoOwner,
+      pullRequest.creatorName,
+      _issueNumber,
+      _pullRequestNumber
+    );
+
     return true;
   }
 
@@ -287,10 +300,8 @@ contract Thunder {
     uint64 _issueNumber,
     string memory _username
   ) public view returns (address) {
-    bytes32 repoId = keccak256(abi.encodePacked(_repoName, _repoOwner));
-    bytes32 issueId = keccak256(
-      abi.encodePacked(_issueNumber, _repoName, _repoOwner)
-    );
+    bytes32 repoId = getRepoId(_repoOwner, _repoName);
+    bytes32 issueId = getIssueId(_repoOwner, _repoName, _issueNumber);
     PullRequest[] memory pullRequestArr = repoPullRequestsArr[repoId][issueId];
     for (uint256 i = 0; i < pullRequestArr.length; i++) {
       if (
@@ -301,6 +312,61 @@ contract Thunder {
       }
     }
     return address(0);
+  }
+
+  function getPullRequestId(
+    string memory _repoOwner,
+    string memory _repoName,
+    uint64 _issueNumber,
+    uint64 _pullRequestNumber,
+    address _receiver
+  ) internal pure returns (bytes32) {
+    return
+      keccak256(
+        abi.encodePacked(
+          _repoOwner,
+          _repoName,
+          _issueNumber,
+          _pullRequestNumber,
+          _receiver
+        )
+      );
+  }
+
+  function getIssueId(
+    string memory _repoOwner,
+    string memory _repoName,
+    uint64 _issueNumber
+  ) internal pure returns (bytes32) {
+    return keccak256(abi.encodePacked(_repoOwner, _repoName, _issueNumber));
+  }
+
+  function getRepoId(string memory _repoOwner, string memory _repoName)
+    internal
+    pure
+    returns (bytes32)
+  {
+    return keccak256(abi.encodePacked(_repoOwner, _repoName));
+  }
+
+  function increaseUserReputation(string memory _repoOwner, uint256 _bounty)
+    internal
+  {
+    User storage user = usernameUserInfo[_repoOwner];
+    user.numberOfIssuesClosedCorrectly += 1;
+    user.reputation +=
+      (_bounty * user.numberOfIssuesClosedCorrectly) -
+      (_bounty * user.numberOfIssuesClosedNotCorrectly);
+  }
+
+  function closeIssue(bytes32 _repoId, bytes32 _issueId) internal {
+    Issue[] storage issues = repoIssues[_repoId];
+    for (uint256 i = 0; i < issues.length; i++) {
+      if (issues[i].id == _issueId) {
+        issues[i].isClosed = true;
+        return;
+      }
+    }
   }
 
   //TODO: function for claiming bad behavior of repoOwner
