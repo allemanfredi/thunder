@@ -9,12 +9,12 @@ import Profile from './profile'
 import { getCorrespondingPageFromGithubURL } from '@thunder/lib/gh-url-parser'
 
 class Layouter {
-  constructor (_url, _inpageRequester) {
+  constructor(_url, _inpageRequester) {
     this.url = _url
     this.inpageRequester = _inpageRequester
   }
 
-  async initMetamask () {
+  async initMetamask() {
     if (window.ethereum) {
       this.web3 = new Web3(ethereum)
       try {
@@ -31,14 +31,14 @@ class Layouter {
     }
   }
 
-  async bindMetamaskAccount () {
+  async bindMetamaskAccount() {
     if (!this.web3) return
 
     const accounts = await this.web3.eth.getAccounts()
     this.currentAccount = accounts[0]
   }
 
-  async injectElements () {
+  async injectElements() {
     const currentPage = getCorrespondingPageFromGithubURL(this.url)
     console.log(currentPage)
 

@@ -4,7 +4,7 @@ import { makeEthContractCall, makeEthContractSend } from '@thunder/lib/eth'
 const NewIssue = {
   form: null,
 
-  async injectElements (_web3, _inpageRequester, _url) {
+  async injectElements(_web3, _inpageRequester, _url) {
     const details = gh(_url)
     const repoOwner = details.owner
     const repoName = details.repo.split('/')[1]
@@ -45,7 +45,7 @@ const NewIssue = {
     })
   },
 
-  async handleSubmit (_event, _web3, _inpageRequester, _url) {
+  async handleSubmit(_event, _web3, _inpageRequester, _url) {
     _event.preventDefault()
 
     const bountyText = document.querySelector('#bounty-value').value

@@ -8,7 +8,7 @@ const pricesColor = {
 }
 
 const IssueDetails = {
-  async injectElements (_web3, _url) {
+  async injectElements(_web3, _url) {
     const textIssueNumber = document.querySelector(
       '#partial-discussion-header > div.gh-header-show > div > h1 > span.gh-header-number'
     ).innerText

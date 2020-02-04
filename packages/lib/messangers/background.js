@@ -1,5 +1,5 @@
 export default {
-  init (duplex) {
+  init(duplex) {
     this.duplex = duplex
   }
 

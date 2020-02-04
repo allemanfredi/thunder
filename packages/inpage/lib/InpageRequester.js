@@ -1,14 +1,14 @@
 import randomUUID from 'uuid/v4'
 
 class InpageRequester {
-  constructor (inpageStream) {
+  constructor(inpageStream) {
     this.inpageStream = inpageStream
     this.calls = {}
 
     this._registerInpageStreamListener()
   }
 
-  _registerInpageStreamListener () {
+  _registerInpageStreamListener() {
     this.inpageStream.on('data', ({ success, data, uuid }) => {
       if (success) this.calls[uuid].resolve(data)
       else this.calls[uuid].reject(data)
@@ -17,7 +17,7 @@ class InpageRequester {
     })
   }
 
-  send (action, data = {}) {
+  send(action, data = {}) {
     const uuid = randomUUID()
 
     this.inpageStream.write({

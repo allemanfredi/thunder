@@ -3,7 +3,7 @@ import { makeEthContractSend } from '@thunder/lib/eth'
 const NewRepo = {
   form: null,
 
-  async injectElements (_web3) {
+  async injectElements(_web3) {
     document
       .querySelector('#new_repository > div.owner-reponame.clearfix')
       .insertAdjacentHTML(
@@ -28,7 +28,7 @@ const NewRepo = {
     })
   },
 
-  async handleSubmit (_event, _web3) {
+  async handleSubmit(_event, _web3) {
     _event.preventDefault()
 
     if (document.querySelector('#bind-to-bounty').checked) {

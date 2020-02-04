@@ -4,16 +4,16 @@ import axios from 'axios'
 const duplex = new Duplex.Host()
 
 const backgroundScript = {
-  run () {
+  run() {
     this.bindPopupDuplex()
     this.bindTabDuplex()
   },
 
-  bindPopupDuplex () {
+  bindPopupDuplex() {
     // duplex.on('eventName', this.doSomething)
   },
 
-  bindTabDuplex () {
+  bindTabDuplex() {
     duplex.on(
       'tabRequest',
       async ({ resolve, data: { action, data, uuid, website } }) => {

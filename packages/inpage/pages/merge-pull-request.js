@@ -10,7 +10,7 @@ const MergePullRequest = {
   pullRequestCreator: null,
   pullRequestCreatorAddress: null,
 
-  async injectElements (_web3, _url) {
+  async injectElements(_web3, _url) {
     const firstCommentWhereIssueNumberShouldBe = document.querySelector(
       '#discussion_bucket > div.col-9 > div > div.js-discussion.js-socket-channel.ml-6.pl-3'
     ).firstElementChild.lastElementChild.firstElementChild.children[2].innerText
@@ -87,7 +87,7 @@ const MergePullRequest = {
       })
   },
 
-  async handleSubmit (_event, _web3, _url) {
+  async handleSubmit(_event, _web3, _url) {
     _event.preventDefault()
     _event.stopPropagation()
 
