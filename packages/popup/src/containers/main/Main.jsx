@@ -1,11 +1,10 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment } from 'react'
 import Header from '../header/Header'
 import Switch from 'react-switch'
+import popupMessanger from '@thunder/lib/messangers/popup'
 import './main.css'
 
 const Main = props => {
-  const [toogleEnabled, setToogleEnabled] = useState(0)
-
   return (
     <Fragment>
       <Header />
@@ -13,9 +12,9 @@ const Main = props => {
       <div className="main__body-container">
         <div className="main__body-container-toogle-button">
           <Switch
-            checked={toogleEnabled}
+            checked={props.globalState.isEnabled}
             onChange={() => {
-              setToogleEnabled(!toogleEnabled)
+              popupMessanger.changeEnabling(!props.globalState.isEnabled)
             }}
             onColor="#888888"
             onHandleColor="#ffa040"

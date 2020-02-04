@@ -1,9 +1,13 @@
 export default {
   init(duplex) {
     this.duplex = duplex
-  }
+  },
 
-  /* func() {
-    return this.duplex.send('func')
-  } */
+  changeEnabling(_isEnabled) {
+    return this.duplex.send('changeEnabling', _isEnabled)
+  },
+
+  getGlobalState() {
+    return this.duplex.send('getGlobalState')
+  }
 }

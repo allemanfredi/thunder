@@ -1,62 +1,55 @@
 import Duplex from '@thunder/lib/Duplex'
-import axios from 'axios'
+import Thunder from './thunder'
+import requestHandler from './utils/'
 
 const duplex = new Duplex.Host()
 
-const backgroundScript = {
-  run() {
-    this.bindPopupDuplex()
-    this.bindTabDuplex()
-  },
+const thunder = requestHandler(new Thunder(duplex))
 
-  bindPopupDuplex() {
-    // duplex.on('eventName', this.doSomething)
-  },
-
-  bindTabDuplex() {
-    duplex.on(
-      'tabRequest',
-      async ({ resolve, data: { action, data, uuid, website } }) => {
-        switch (action) {
-          case 'getAccountInfo': {
-            const res = await axios.get(
-              `https://api.github.com/users/${data.username}`
-            )
-            resolve({
-              success: true,
-              data: res.data,
-              uuid
-            })
-            break
-          }
-          case 'getRepoInfo': {
-            const res = await axios.get(
-              `https://api.github.com/repos/${data.repo}`
-            )
-
-            resolve({
-              success: true,
-              data: res.data,
-              uuid
-            })
-            break
-          }
-          case 'getRepoIssues': {
-            const res = await axios.get(
-              `https://api.github.com/repos/${data.repo}/issues?state=all`
-            )
-
-            resolve({
-              success: true,
-              data: res.data,
-              uuid
-            })
-            break
-          }
-        }
-      }
-    )
-  }
+const bindPopupDuplex = () => {
+  duplex.on('getGlobalState', thunder.getGlobalState)
+  duplex.on('changeEnabling', thunder.changeEnabling)
 }
 
-backgroundScript.run()
+const bindTabDuplex = () => {
+  duplex.on('tabRequest', async ({ resolve, data: { action, data, uuid } }) => {
+    switch (action) {
+      case 'getAccountInfo': {
+        const accountInfo = await thunder.githubApiController.getAccountInfo(
+          data.username
+        )
+        resolve({
+          success: true,
+          data: accountInfo,
+          uuid
+        })
+        break
+      }
+      case 'getRepoInfo': {
+        const repoInfo = await thunder.githubApiController.getRepoInfo(
+          data.repo
+        )
+        resolve({
+          success: true,
+          data: repoInfo,
+          uuid
+        })
+        break
+      }
+      case 'getRepoIssues': {
+        const repoIssues = await thunder.githubApiController.getRepoIssues(
+          data.repo
+        )
+        resolve({
+          success: true,
+          data: repoIssues,
+          uuid
+        })
+        break
+      }
+    }
+  })
+}
+
+bindTabDuplex()
+bindPopupDuplex()

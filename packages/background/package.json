@@ -7,7 +7,8 @@
   "dependencies": {
     "axios": "^0.19.2",
     "eventemitter3": "^3.1.0",
-    "extensionizer": "^1.0.1"
+    "extensionizer": "^1.0.1",
+    "rxjs-observable-store": "^2.0.4"
   },
   "scripts": {
     "build": "webpack --config ../../webpack.config.js --progress --colors -o ../../dist/background.js",
