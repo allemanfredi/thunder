@@ -3,7 +3,7 @@ import randomUUID from 'uuid/v4'
 import extensionizer from 'extensionizer'
 
 class DuplexHost extends EventEmitter {
-  constructor() {
+  constructor () {
     super()
 
     this.channels = new Map()
@@ -15,7 +15,7 @@ class DuplexHost extends EventEmitter {
     )
   }
 
-  handleNewConnection(channel) {
+  handleNewConnection (channel) {
     const extensionID = channel.sender.id
     const uuid = randomUUID()
 
@@ -63,7 +63,7 @@ class DuplexHost extends EventEmitter {
     })
   }
 
-  handleMessage(source, message) {
+  handleMessage (source, message) {
     const { noAck = false, hostname, messageID, action, data } = message
 
     if (action === 'messageReply') return this.handleReply(data)
@@ -105,7 +105,7 @@ class DuplexHost extends EventEmitter {
     })
   }
 
-  handleReply({ messageID, error, res }) {
+  handleReply ({ messageID, error, res }) {
     if (!this.outgoing.has(messageID)) return
 
     if (error) this.outgoing.get(messageID)(Promise.reject(res))
@@ -114,7 +114,7 @@ class DuplexHost extends EventEmitter {
     this.outgoing.delete(messageID)
   }
 
-  broadcast(action, data, requiresAck = true) {
+  broadcast (action, data, requiresAck = true) {
     return Promise.all(
       [...this.channels.keys()].map(channelGroup =>
         this.send(channelGroup, action, data, requiresAck)
@@ -122,7 +122,7 @@ class DuplexHost extends EventEmitter {
     )
   }
 
-  send(target = false, action, data, requiresAck = true) {
+  send (target = false, action, data, requiresAck = true) {
     if (!this.channels.has(target)) return
 
     if (!requiresAck) {

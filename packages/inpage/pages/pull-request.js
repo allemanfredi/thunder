@@ -5,7 +5,7 @@ import gh from 'parse-github-url'
 const PullRequest = {
   form: null,
 
-  async injectElements(_web3, _url, _inpageRequester) {
+  async injectElements (_web3, _url, _inpageRequester) {
     const details = gh(_url)
     const repoOwner = details.owner
     const repoName = details.repo.split('/')[1]
@@ -52,7 +52,7 @@ const PullRequest = {
     })
   },
 
-  async handleSubmit(_event, _web3, _url, _inpageRequester) {
+  async handleSubmit (_event, _web3, _url, _inpageRequester) {
     _event.preventDefault()
 
     const pullRequestTextBody = document.querySelector('#pull_request_body')

@@ -28,7 +28,7 @@ const inject = () => {
   const container = document.createElement('script')
 
   container.src = extensionizer.extension.getURL('dist/inpage.js')
-  container.onload = function() {
+  container.onload = function () {
     this.parentNode.removeChild(this)
   }
 

@@ -23,7 +23,7 @@ const extrapolateIssueNumberFromText = _text => {
 
   if (!isIncluded) return false
 
-  const words = _text.split(' ').filter(word => word != '')
+  const words = _text.split(' ').filter(word => word !== '')
   const indexPresentSpecialKeyword = words.indexOf(includedSpecialKeyword)
 
   if (words[indexPresentSpecialKeyword + 1].match('#[1-9][0-9]*')) {
@@ -35,7 +35,7 @@ const extrapolateIssueNumberFromText = _text => {
 }
 
 const getIssueNumberFromIssue = _issue => {
-  return _issue.attributes[0].value.match(/[0-9]*/g).find(e => e != '')
+  return _issue.attributes[0].value.match(/[0-9]*/g).find(e => e !== '')
 }
 
 export { extrapolateIssueNumberFromText, getIssueNumberFromIssue }

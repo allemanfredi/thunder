@@ -3,7 +3,7 @@ import randomUUID from 'uuid/v4'
 import extensionizer from 'extensionizer'
 
 class DuplexChild extends EventEmitter {
-  constructor(type = false) {
+  constructor (type = false) {
     super()
 
     if (!['tab', 'popup'].includes(type)) {
@@ -24,7 +24,7 @@ class DuplexChild extends EventEmitter {
     this.connectionGovernor()
   }
 
-  connectToHost() {
+  connectToHost () {
     this.channel = extensionizer.runtime.connect({
       name: this.type
     })
@@ -46,7 +46,7 @@ class DuplexChild extends EventEmitter {
     })
   }
 
-  resetGovernor() {
+  resetGovernor () {
     if (this.governor && this.governor.connectionEstablisher.func)
       clearInterval(this.connectionGovernor.connectionEstablisher.func)
 
@@ -64,12 +64,12 @@ class DuplexChild extends EventEmitter {
     }
   }
 
-  connectionGovernor() {
+  connectionGovernor () {
     if (this.isHost)
       throw new Error('Host port cannot establish governor status')
   }
 
-  handleMessage({ action, data, messageID, noAck = false }) {
+  handleMessage ({ action, data, messageID, noAck = false }) {
     if (action === 'messageReply') return this.handleReply(data)
 
     if (noAck) return this.emit(action, data)
@@ -97,7 +97,7 @@ class DuplexChild extends EventEmitter {
     })
   }
 
-  handleReply({ messageID, error, res }) {
+  handleReply ({ messageID, error, res }) {
     if (!this.outgoing.has(messageID)) return
 
     if (error) this.outgoing.get(messageID)(Promise.reject(res))
@@ -106,7 +106,7 @@ class DuplexChild extends EventEmitter {
     this.outgoing.delete(messageID)
   }
 
-  send(action, data, requiresAck = true) {
+  send (action, data, requiresAck = true) {
     const { governor } = this
 
     if (!governor.isConnected && !governor.hasTimedOut) {
