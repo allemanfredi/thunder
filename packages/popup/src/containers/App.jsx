@@ -20,10 +20,8 @@ class App extends Component {
 
     const globalState = await popupMessanger.getGlobalState()
     this.setState({ globalState })
-    console.log(globalState)
 
     this.duplex.on('onChangeGlobalState', globalState => {
-      console.log('state changed', globalState)
       this.setState({ globalState })
     })
   }
