@@ -19,7 +19,7 @@ class Thunder {
   }
 
   isEnabled() {
-    return this.persistenceGlobalStateController.state.isEnabled 
+    return this.persistenceGlobalStateController.state.isEnabled
   }
 }
 

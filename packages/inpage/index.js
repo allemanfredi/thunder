@@ -11,8 +11,7 @@ const layouter = new Layouter(window.location.href, inpageRequester)
 
 const start = async () => {
   const isThunderEnabled = await inpageRequester.send('isEnabled')
-  if (isThunderEnabled)
-    layouter.injectElements()
+  if (isThunderEnabled) layouter.injectElements()
 }
 
 start()
