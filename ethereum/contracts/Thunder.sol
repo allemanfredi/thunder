@@ -254,22 +254,27 @@ contract Thunder {
       "acceptPullRequest -> _receiver didn't perform a pull request"
     );
 
+    require(
+      isIssueClosed(repoId, issueId) == false,
+      'acceptPullRequest -> Issue already closed'
+    );
+
     PullRequest storage pullRequest = repoPullRequests[repoId][issueId][_receiver];
     require(
       pullRequest.isClosed == false,
       'acceptPullRequest -> Pull request already closed'
     );
 
-    //if msg.sender == _receiver then reputation should not increase as a user could self increase reputation
-    if (_receiver != msg.sender) {
-      increaseUserReputation(_repoOwner, issueBounty[issueId]);
-    }
-
     (bool success, ) = _receiver.call.value(issueBounty[issueId])('');
     require(
       success == true,
       'acceptPullRequest -> Error during bounty transfering'
     );
+
+    //if msg.sender == _receiver then reputation should not increase as a user could self increase reputation
+    if (_receiver != msg.sender) {
+      increaseUserReputation(_repoOwner, issueBounty[issueId]);
+    }
 
     pullRequest.isClosed = true;
     closeIssue(repoId, issueId);
@@ -367,6 +372,20 @@ contract Thunder {
         return;
       }
     }
+  }
+
+  function isIssueClosed(bytes32 _repoId, bytes32 _issueId)
+    internal
+    view
+    returns (bool)
+  {
+    Issue[] memory issues = repoIssues[_repoId];
+    for (uint256 i = 0; i < issues.length; i++) {
+      if (issues[i].id == _issueId && issues[i].isClosed == true) {
+        return true;
+      }
+    }
+    return false;
   }
 
   //TODO: function for claiming bad behavior of repoOwner
