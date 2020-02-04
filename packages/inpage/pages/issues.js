@@ -29,7 +29,7 @@ const Issues = {
     const issues = [...issuesHTMLCollection]
     issues.forEach(async issue => {
       const issueNumber = getIssueNumberFromIssue(issue)
-      const issueBounty = await makeEthContractCall(_web3, 'getIssuePrice', [
+      const issueBounty = await makeEthContractCall(_web3, 'getIssueBounty', [
         repoOwner,
         repoName,
         parseInt(issueNumber)

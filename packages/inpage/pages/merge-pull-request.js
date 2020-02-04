@@ -22,7 +22,7 @@ const MergePullRequest = {
     const repoOwner = details.owner
     const repoName = details.repo.split('/')[1]
 
-    const issueBounty = await makeEthContractCall(_web3, 'getIssuePrice', [
+    const issueBounty = await makeEthContractCall(_web3, 'getIssueBounty', [
       repoOwner,
       repoName,
       parseInt(this.issueNumber)
