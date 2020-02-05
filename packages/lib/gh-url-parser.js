@@ -48,6 +48,14 @@ const getCorrespondingPageFromGithubURL = _url => {
 
   if (_matchExact(/https:\/\/github.com\/[a-z0-9]*?[?tab=[a-z]*]?/g, _url))
     return 'profile'
+
+  if (
+    _matchExact(
+      /https:\/\/github.com\/[a-zA-Z0-9]*\/[a-zA-ZA0-9]*\/settings[\/]?/g,
+      _url
+    )
+  )
+    return 'repo-settings'
 }
 
 export { getCorrespondingPageFromGithubURL }

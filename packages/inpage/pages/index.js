@@ -6,6 +6,7 @@ import Issues from './issues'
 import IssueDetails from './issue-details'
 import MergePullRequest from './merge-pull-request'
 import Profile from './profile'
+import RepoSettings from './repo-settings'
 import { getCorrespondingPageFromGithubURL } from '@thunder/lib/gh-url-parser'
 
 class Layouter {
@@ -49,7 +50,8 @@ class Layouter {
       currentPage === 'issue-details' ||
       currentPage === 'pull-request' ||
       currentPage === 'merge-pull-request' ||
-      currentPage === 'profile'
+      currentPage === 'profile' ||
+      currentPage === 'repo-settings'
     ) {
       await this.initMetamask()
       await this.bindMetamaskAccount()
@@ -86,6 +88,10 @@ class Layouter {
       }
       case 'profile': {
         Profile.injectElements(this.web3, this.url)
+        break
+      }
+      case 'repo-settings': {
+        RepoSettings.injectElements(this.web3, this.url)
         break
       }
       default:
