@@ -1,5 +1,5 @@
 const _matchExact = (r, str) => {
-  var match = str.match(r)
+  const match = str.match(r)
   return match && str === match[0]
 }
 
