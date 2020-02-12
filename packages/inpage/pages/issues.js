@@ -10,13 +10,21 @@ const pricesColor = {
 
 const Issues = {
   injectElements(_web3, _url) {
-    /* const issuesHTMLCollectionParent = document.querySelector(
-      '#js-repo-pjax-container > div.container-lg.clearfix.new-discussion-timeline.experiment-repo-nav.px-3 > div > div > div.Box.mt-3 > div:nth-child(2) > div'
-    ) */
-
-    const issuesHTMLCollectionParent = document.querySelector(
+    let issuesHTMLCollectionParent = document.querySelector(
       '#js-repo-pjax-container > div.container-lg.clearfix.new-discussion-timeline.px-3 > div > div > div.Box.mt-3 > div:nth-child(2) > div'
     )
+
+    if (!issuesHTMLCollectionParent) {
+      issuesHTMLCollectionParent = document.querySelector(
+        '#js-repo-pjax-container > div.container-lg.clearfix.new-discussion-timeline.experiment-repo-nav.px-3 > div > div > div.Box.mt-3 > div:nth-child(2) > div'
+      )
+    }
+
+    if (!issuesHTMLCollectionParent) {
+      issuesHTMLCollectionParent = document.querySelector(
+        '#js-repo-pjax-container > div.container-lg.clearfix.new-discussion-timeline.p-responsive > div > div > div.Box.mt-3.Box--responsive > div:nth-child(2) > div'
+      )
+    }
 
     if (!issuesHTMLCollectionParent) return
 
